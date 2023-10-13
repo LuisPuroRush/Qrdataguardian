@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Usuarios</title>
+    <!-- Tus estilos CSS si es necesario -->
+</head>
+<body>
+    <h1>Estadísticas de Usuarios</h1>
+    <div id="user-info">
+        <!-- Aquí se mostrará la información del usuario -->
+    </div>
+
+    <script>
+        // Obtén el parámetro "userId" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId");
+
+        // Información de usuarios
+        const usersInfo = [
+            {
+                nombre: "Usuario 1",
+                foto: "Profesora.jpg",
+                descripcion: "Esta es una descripción del Usuario 1.",
+            },
+            {
+                nombre: "Usuario 2",
+                foto: "giovani.jpg",
+                descripcion: "Esta es una descripción del Usuario 2.",
+            },
+            {
+                nombre: "Usuario 3",
+                foto: "usuario1.jpg",
+                descripcion: "Esta es una descripción del Usuario 3.",
+            },
+            {
+                nombre: "Usuario 4",
+                foto: "usuario2.jpg",
+                descripcion: "Esta es una descripción del Usuario 4.",
+            },
+            {
+                nombre: "Usuario 5",
+                foto: "usuario3.jpg",
+                descripcion: "Esta es una descripción del Usuario 5.",
+            },
+            {
+                nombre: "Usuario 6",
+                foto: "usuario4.jpg",
+                descripcion: "Esta es una descripción del Usuario 6.",
+            },
+            {
+                nombre: "Usuario 7",
+                foto: "imagen7.jpg",
+                descripcion: "Esta es una descripción del Usuario 7.",
+            }
+            // Puedes agregar información para más usuarios aquí
+        ];
+
+        // Función para mostrar la información del usuario
+        function mostrarInformacionUsuario() {
+            const userInfo = usersInfo[userId - 1]; // Resta 1 porque los índices comienzan en 0
+
+            if (userInfo) {
+                const userInfoContainer = document.getElementById("user-info");
+                const userImage = document.createElement("img");
+                userImage.src = userInfo.foto;
+                userImage.alt = userInfo.nombre;
+                const userName = document.createElement("h2");
+                userName.textContent = userInfo.nombre;
+                const userDescription = document.createElement("p");
+                userDescription.textContent = userInfo.descripcion;
+
+                userInfoContainer.appendChild(userImage);
+                userInfoContainer.appendChild(userName);
+                userInfoContainer.appendChild(userDescription);
+            } else {
+                // Mostrar un mensaje si el usuario no existe
+                const userInfoContainer = document.getElementById("user-info");
+                userInfoContainer.textContent = "Usuario no encontrado.";
+            }
+        }
+
+        // Llama a la función para mostrar la información del usuario
+        mostrarInformacionUsuario();
+    </script>
+</body>
+</html>
