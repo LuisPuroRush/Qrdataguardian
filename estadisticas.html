@@ -3,86 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <title>Estadísticas de Usuarios</title>
-    <!-- Tus estilos CSS si es necesario -->
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .table-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 1200px;
+        }
+        .circle {
+            width: 200px;
+            height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            margin: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.2s;
+            display: none;
+        }
+        .circle.active {
+            display: flex;
+        }
+        .circle:hover {
+            transform: scale(1.05);
+        }
+        .circle img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .user-info {
+            text-align: center;
+            padding: 15px;
+        }
+        .circle button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-top: 10px;
+        }
+        .circle button:hover {
+            background-color: #0056b3;
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-family: 'Cursive', cursive; /* Cambio de fuente a cursive */
+        }
+    </style>
 </head>
 <body>
-    <h1>Estadísticas de Usuarios</h1>
-    <div id="user-info">
-        <!-- Aquí se mostrará la información del usuario -->
+    <div class="table-container">
+        <div class="circle">
+            <img src="Profesora.jpg" alt="Usuario 1">
+            <div class="user-info">
+                <p>Usuario 1</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="giovani.jpg" alt="Usuario 2">
+            <div class="user-info">
+                <p>Usuario 2</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="usuario1.jpg" alt="Usuario 3">
+            <div class="user-info">
+                <p>Usuario 3</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="usuario2.jpg" alt="Usuario 4">
+            <div class="user-info">
+                <p>Usuario 4</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="usuario3.jpg" alt="Usuario 5">
+            <div class="user-info">
+                <p>Usuario 5</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="usuario4.jpg" alt="Usuario 6">
+            <div class="user-info">
+                <p>Usuario 6</p>
+
+            </div>
+        </div>
+        <div class="circle">
+            <img src="usuario5.jpg" alt="Usuario 7">
+            <div class="user-info">
+                <p>Usuario 7</p>
+
+            </div>
+        </div>
+        
     </div>
 
     <script>
+        // Función para mostrar la información del usuario seleccionado
+        function mostrarInformacionUsuario(userId) {
+            // Ocultar todos los círculos
+            const circles = document.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                circle.classList.remove('active');
+            });
+            
+            // Mostrar solo el círculo del usuario seleccionado
+            const userInfoContainer = document.querySelector('.circle:nth-child(' + userId + ')');
+            userInfoContainer.classList.add('active');
+        }
+
         // Obtén el parámetro "userId" de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get("userId");
 
-        // Información de usuarios
-        const usersInfo = [
-            {
-                nombre: "Usuario 1",
-                foto: "Profesora.jpg",
-                descripcion: "Esta es una descripción del Usuario 1.",
-            },
-            {
-                nombre: "Usuario 2",
-                foto: "giovani.jpg",
-                descripcion: "Esta es una descripción del Usuario 2.",
-            },
-            {
-                nombre: "Usuario 3",
-                foto: "usuario1.jpg",
-                descripcion: "Esta es una descripción del Usuario 3.",
-            },
-            {
-                nombre: "Usuario 4",
-                foto: "usuario2.jpg",
-                descripcion: "Esta es una descripción del Usuario 4.",
-            },
-            {
-                nombre: "Usuario 5",
-                foto: "usuario3.jpg",
-                descripcion: "Esta es una descripción del Usuario 5.",
-            },
-            {
-                nombre: "Usuario 6",
-                foto: "usuario4.jpg",
-                descripcion: "Esta es una descripción del Usuario 6.",
-            },
-            {
-                nombre: "Usuario 7",
-                foto: "imagen7.jpg",
-                descripcion: "Esta es una descripción del Usuario 7.",
-            }
-            // Puedes agregar información para más usuarios aquí
-        ];
-
-        // Función para mostrar la información del usuario
-        function mostrarInformacionUsuario() {
-            const userInfo = usersInfo[userId - 1]; // Resta 1 porque los índices comienzan en 0
-
-            if (userInfo) {
-                const userInfoContainer = document.getElementById("user-info");
-                const userImage = document.createElement("img");
-                userImage.src = userInfo.foto;
-                userImage.alt = userInfo.nombre;
-                const userName = document.createElement("h2");
-                userName.textContent = userInfo.nombre;
-                const userDescription = document.createElement("p");
-                userDescription.textContent = userInfo.descripcion;
-
-                userInfoContainer.appendChild(userImage);
-                userInfoContainer.appendChild(userName);
-                userInfoContainer.appendChild(userDescription);
-            } else {
-                // Mostrar un mensaje si el usuario no existe
-                const userInfoContainer = document.getElementById("user-info");
-                userInfoContainer.textContent = "Usuario no encontrado.";
-            }
+        if (userId) {
+            // Llama a la función para mostrar la información del usuario seleccionado
+            mostrarInformacionUsuario(parseInt(userId));
         }
-
-        // Llama a la función para mostrar la información del usuario
-        mostrarInformacionUsuario();
     </script>
 </body>
 </html>
