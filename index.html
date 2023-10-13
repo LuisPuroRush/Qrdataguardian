@@ -4,81 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Empleados</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%; /* Ancho aumentado para mejorar el espacio */
+            max-width: 800px; /* Límite de ancho para una buena legibilidad */
+        }
+
+        .form-container, .table-container {
+            width: 100%; /* Ocupan todo el ancho disponible */
+            padding: 20px;
+            margin: 10px 0; /* Espacio superior e inferior */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input, form button {
+            margin: 10px 0; /* Espacio superior e inferior */
+            padding: 10px; /* Espacio interno aumentado */
+            border: 1px solid #ccc; /* Borde para resaltar los campos */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px; /* Espacio interno aumentado para mayor legibilidad */
+        }
+
+        /* Estilos adicionales para el botón */
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<style>
- body {
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.form-container, .table-container {
-    width: 50%;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-form input, form button {
-    margin: 5px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ccc;
-    padding: 5px;
-}
-
-.qr-code {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#qr-image {
-    max-width: 100%;
-}
-
-/* Estilos adicionales */
-.container {
-    background-color: #f0f0f0;
-}
-
-.form-container, .table-container {
-    background-color: #fff;
-}
-
-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.qr-code {
-    background-color: #fff;
-    padding: 10px;
-}
-
-</style>
 <body>
     <div class="container">
         <div class="form-container">
@@ -102,84 +91,57 @@ button:hover {
                 <tbody>
                 </tbody>
             </table>
-            <div class="qr-code">
-                <div id="qr-image"></div>
-            </div>
         </div>
+        <!-- Agrega el botón "Solo Ejecutivos" que redirige a otra página -->
+        <button onclick="window.location.href = 'Ejecutivos.html'">Solo Ejecutivos</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.1/qrcode.js"></script>
-
     <script>
         // Obtener elementos del DOM
-const employeeForm = document.getElementById("employee-form");
-const employeeTable = document.querySelector("table tbody");
-const qrImage = document.getElementById("qr-image");
+        const employeeForm = document.getElementById("employee-form");
+        const employeeTable = document.querySelector("table tbody");
 
-// Crear un arreglo para almacenar los empleados
-const employees = [];
+        // Crear un arreglo para almacenar los empleados
+        const employees = [];
 
-// Agregar evento al formulario
-employeeForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+        // Agregar evento al formulario
+        employeeForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    // Obtener los valores del formulario
-    const name = document.getElementById("name").value;
-    const jobTitle = document.getElementById("jobTitle").value;
-    const idNumber = document.getElementById("idNumber").value;
+            // Obtener los valores del formulario
+            const name = document.getElementById("name").value;
+            const jobTitle = document.getElementById("jobTitle").value;
+            const idNumber = document.getElementById("idNumber").value;
 
-    // Validar que se ingresen todos los campos
-    if (name && jobTitle && idNumber) {
-        // Crear un objeto de empleado
-        const employee = { name, jobTitle, idNumber };
-        employees.push(employee);
+            // Validar que se ingresen todos los campos
+            if (name && jobTitle && idNumber) {
+                // Crear un objeto de empleado
+                const employee = { name, jobTitle, idNumber };
+                employees.push(employee);
 
-        // Limpiar el formulario
-        employeeForm.reset();
+                // Limpiar el formulario
+                employeeForm.reset();
 
-        // Actualizar la tabla
-        updateTable();
+                // Actualizar la tabla
+                updateTable();
+            } else {
+                alert("Por favor, complete todos los campos.");
+            }
+        });
 
-        // Generar y mostrar el código QR
-        generateQRCode(employee);
-    } else {
-        alert("Por favor, complete todos los campos.");
-    }
-});
-
-// Actualizar la tabla de empleados
-function updateTable() {
-    employeeTable.innerHTML = "";
-    employees.forEach((employee) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${employee.name}</td>
-            <td>${employee.jobTitle}</td>
-            <td>${employee.idNumber}</td>
-        `;
-        employeeTable.appendChild(row);
-    });
-}
-
-// Generar el código QR
-function generateQRCode(employee) {
-    const webpageURL = "https://www.ejemplo.com/tu-pagina-web"; // Reemplaza con la URL deseada
-    const qrData = `${employee.name}, ${employee.jobTitle}\n${webpageURL}`;
-    
-    const qr = new QRCode(0, QRCode.QRErrorCorrectLevel.H);
-    qr.addData(qrData);
-    qr.make();
-
-    // Limpiar la imagen anterior, si la hay
-    qrImage.innerHTML = "";
-
-    // Generar el código QR en un div en lugar de una imagen
-    qr.createSvgTag({ scalable: true }, 8);
-    qrImage.innerHTML = qr.createImgTag(50); // Cambia el tamaño si es necesario
-}
-
-// Llamar a la función de actualización inicial
-updateTable();
-
+        // Actualizar la tabla de empleados
+        function updateTable() {
+            employeeTable.innerHTML = "";
+            employees.forEach((employee) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${employee.name}</td>
+                    <td>${employee.jobTitle}</td>
+                    <td>${employee.idNumber}</td>
+                `;
+                employeeTable.appendChild(row);
+            });
+        }
     </script>
 </body>
 </html>
