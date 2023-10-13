@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
     <title>Estadísticas de Usuarios</title>
     <link rel="icon" href="logo.ico" type="image/x-icon">
     <style>
@@ -17,11 +18,16 @@
             height: 100vh;
             margin: 0;
         }
-        .table-container {
+        .user-container {
             display: flex;
-            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .circle-container {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            width: 1200px;
+            width: 200px;
+            margin-left: 20px;
         }
         .circle {
             width: 200px;
@@ -68,64 +74,82 @@
         .title {
             font-size: 24px;
             margin-bottom: 20px;
-            font-family: 'Cursive', cursive; /* Cambio de fuente a cursive */
+            font-family: 'Cursive', cursive;
+        }
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+        .chart {
+            width: 300px;
+            height: 300px;
         }
     </style>
 </head>
 <body>
-    <div class="table-container">
-        <div class="circle">
-            <img src="Profesora.jpg" alt="Usuario 1">
-            <div class="user-info">
-                <p>Usuario 1</p>
-
+    <div class="title">Los ejecutivos de este proyecto</div>
+    <div class="user-container">
+        <div class="circle-container">
+            <div class="circle active">
+                <img src="Profesora.jpg" alt="Usuario 1">
+                <div class="user-info">
+                    <p>Leyva Corro</p>
+  
+                </div>
             </div>
-        </div>
-        <div class="circle">
-            <img src="giovani.jpg" alt="Usuario 2">
-            <div class="user-info">
-                <p>Usuario 2</p>
-
-            </div>
-        </div>
-        <div class="circle">
-            <img src="usuario1.jpg" alt="Usuario 3">
-            <div class="user-info">
-                <p>Usuario 3</p>
-
-            </div>
-        </div>
-        <div class="circle">
-            <img src="usuario2.jpg" alt="Usuario 4">
-            <div class="user-info">
-                <p>Usuario 4</p>
-
-            </div>
-        </div>
-        <div class="circle">
-            <img src="usuario3.jpg" alt="Usuario 5">
-            <div class="user-info">
-                <p>Usuario 5</p>
-
-            </div>
-        </div>
-        <div class="circle">
-            <img src="usuario4.jpg" alt="Usuario 6">
-            <div class="user-info">
-                <p>Vanessa Genovés❤</p>
-
-            </div>
-        </div>
-        <div class="circle">
-            <img src="usuario5.jpg" alt="Usuario 7">
-            <div class="user-info">
-                <p>Henry Ascencio</p>
-
-            </div>
-        </div>
+            <div class="circle active">
+                <img src="giovani.jpg" alt="Usuario 2">
+                <div class="user-info">
+                    <p>Gianfranco Bazán</p>
         
+                </div>
+            </div>
+            <div class="circle">
+                <img src="usuario1.jpg" alt="Usuario 3">
+                <div class="user-info">
+                    <p>Sergio leyva</p>
+         
+                </div>
+            </div>
+            <div class="circle">
+                <img src="usuario2.jpg" alt="Usuario 4">
+                <div class="user-info">
+                    <p>Deily Matos</p>
+       
+                </div>
+            </div>
+            <div class="circle">
+                <img src="usuario3.jpg" alt="Usuario 5">
+                <div class="user-info">
+                    <p>Frank Aguilar</p>
+      
+                </div>
+            </div>
+            <div class="circle">
+                <img src="usuario4.jpg" alt="Usuario 6">
+                <div class="user-info">
+                    <p>Vanessa Genovés❤</p>
+
+                </div>
+            </div>
+            <div class="circle">
+                <img src="usuario5.jpg" alt="Usuario 7">
+                <div class="user-info">
+                    <p>Henry Ascencio</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="stats-container">
+            <h3>Reporte de Gastos</h3>
+            <canvas class="chart" id="gastos-chart"></canvas>
+            <h3>Balance de Estado de Cuenta</h3>
+            <canvas class="chart" id="balance-chart"></canvas>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Función para mostrar la información del usuario seleccionado
         function mostrarInformacionUsuario(userId) {
@@ -148,6 +172,50 @@
             // Llama a la función para mostrar la información del usuario seleccionado
             mostrarInformacionUsuario(parseInt(userId));
         }
+
+        // Datos de ejemplo para los gráficos
+        const gastosData = {
+            labels: ["Alquiler", "Comida", "Transporte", "Entretenimiento", "Otros"],
+            datasets: [{
+                data: [200, 300, 150, 100, 50],
+                backgroundColor: ["#FF5733", "#FFC300", "#33FF57", "#3365FF", "#FF33FF"]
+            }]
+        };
+
+        const balanceData = {
+            labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+            datasets: [{
+                label: "Ingresos",
+                data: [1000, 1200, 1100, 900, 1050],
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1
+            }, {
+                label: "Gastos",
+                data: [400, 500, 450, 300, 350],
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1
+            }]
+        };
+
+        // Configuración de los gráficos
+        const gastosChart = new Chart(document.getElementById('gastos-chart'), {
+            type: 'doughnut',
+            data: gastosData
+        });
+
+        const balanceChart = new Chart(document.getElementById('balance-chart'), {
+            type: 'bar',
+            data: balanceData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
