@@ -85,6 +85,48 @@
             width: 300px;
             height: 300px;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            text-align: center;
+            width: 300px;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        input[type="password"] {
+            padding: 5px;
+            margin: 10px 0;
+        }
+        .forgot-password {
+            margin: 10px 0;
+        }
+        .virtual-keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .virtual-key {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -95,49 +137,48 @@
                 <img src="Profesora.jpg" alt="Usuario 1">
                 <div class="user-info">
                     <p>Leyva Corro</p>
-  
+          
                 </div>
             </div>
-            <div class="circle active">
+            <div class="circle">
                 <img src="giovani.jpg" alt="Usuario 2">
                 <div class="user-info">
                     <p>Gianfranco Bazán</p>
-        
+             
                 </div>
             </div>
+            <!-- Agrega más círculos para otros usuarios aquí -->
             <div class="circle">
                 <img src="usuario1.jpg" alt="Usuario 3">
                 <div class="user-info">
                     <p>Sergio leyva</p>
-         
                 </div>
             </div>
             <div class="circle">
-                <img src="usuario2.jpg" alt="Usuario 4">
+                <img src="usuario2.jpg" alt="Usuario 3">
                 <div class="user-info">
                     <p>Deily Matos</p>
-       
+
                 </div>
             </div>
             <div class="circle">
-                <img src="usuario3.jpg" alt="Usuario 5">
+                <img src="usuario3.jpg" alt="Usuario 3">
                 <div class="user-info">
                     <p>Frank Aguilar</p>
-      
+
                 </div>
             </div>
             <div class="circle">
-                <img src="usuario4.jpg" alt="Usuario 6">
+                <img src="usuario4.jpg" alt="Usuario 3">
                 <div class="user-info">
                     <p>Vanessa Genovés</p>
 
                 </div>
             </div>
             <div class="circle">
-                <img src="usuario5.jpg" alt="Usuario 7">
+                <img src="usuario5.jpg" alt="Usuario 3">
                 <div class="user-info">
                     <p>Henry Ascencio</p>
-
                 </div>
             </div>
         </div>
@@ -148,32 +189,32 @@
             <canvas class="chart" id="balance-chart"></canvas>
         </div>
     </div>
-
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <h2>Ingrese su contraseña</h2>
+            <input type="password" id="password-input" maxlength="5">
+            <br>
+            <button id="password-submit">Ingresar</button>
+            <div class="forgot-password">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+            <div class="virtual-keyboard">
+                <div class="virtual-key" data-key="1">1</div>
+                <div class="virtual-key" data-key="2">2</div>
+                <div class="virtual-key" data-key="3">3</div>
+                <div class="virtual-key" data-key="4">4</div>
+                <div class="virtual-key" data-key="5">5</div>
+                <div class="virtual-key" data-key="6">6</div>
+                <div class="virtual-key" data-key="7">7</div>
+                <div class="virtual-key" data-key="8">8</div>
+                <div class="virtual-key" data-key="9">9</div>
+                <div class="virtual-key" data-key="0">0</div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Función para mostrar la información del usuario seleccionado
-        function mostrarInformacionUsuario(userId) {
-            // Ocultar todos los círculos
-            const circles = document.querySelectorAll('.circle');
-            circles.forEach(circle => {
-                circle.classList.remove('active');
-            });
-            
-            // Mostrar solo el círculo del usuario seleccionado
-            const userInfoContainer = document.querySelector('.circle:nth-child(' + userId + ')');
-            userInfoContainer.classList.add('active');
-        }
-
-        // Obtén el parámetro "userId" de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get("userId");
-
-        if (userId) {
-            // Llama a la función para mostrar la información del usuario seleccionado
-            mostrarInformacionUsuario(parseInt(userId));
-        }
-
-        // Datos de ejemplo para los gráficos
+        // Configuración de los gráficos
         const gastosData = {
             labels: ["Alquiler", "Comida", "Transporte", "Entretenimiento", "Otros"],
             datasets: [{
@@ -199,23 +240,99 @@
             }]
         };
 
-        // Configuración de los gráficos
-        const gastosChart = new Chart(document.getElementById('gastos-chart'), {
-            type: 'doughnut',
-            data: gastosData
-        });
+        // Función para mostrar la información del usuario seleccionado
+        function mostrarInformacionUsuario(userId) {
+            // Ocultar todos los círculos
+            const circles = document.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                circle.classList.remove('active');
+            });
 
-        const balanceChart = new Chart(document.getElementById('balance-chart'), {
-            type: 'bar',
-            data: balanceData,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+            // Mostrar solo el círculo del usuario seleccionado
+            const userInfoContainer = document.querySelector('.circle:nth-child(' + userId + ')');
+            userInfoContainer.classList.add('active');
+
+            // Inicializar y actualizar los gráficos
+            const gastosChart = new Chart(document.getElementById('gastos-chart'), {
+                type: 'doughnut',
+                data: gastosData
+            });
+
+            const balanceChart = new Chart(document.getElementById('balance-chart'), {
+                type: 'bar',
+                data: balanceData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
+            });
+        }
+
+        // Obtén el parámetro "userId" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId");
+
+        if (userId) {
+            // Llama a la función para mostrar la información del usuario seleccionado
+            mostrarInformacionUsuario(parseInt(userId));
+        }
+
+        // Agregar un evento para mostrar el modal de contraseña
+        if (userId) {
+            const modal = document.getElementById("password-modal");
+            const passwordInput = document.getElementById("password-input");
+            const passwordSubmit = document.getElementById("password-submit");
+            // Configurar contraseñas de ejemplo para cada usuario
+            const passwords = {
+                "1": "12345",
+                "2": "54321",
+                "3": "11110",
+                "4": "55550",
+                "5": "33330",
+                "6": "88880",
+                "7":  "11112"
+                // Agrega las contraseñas para otros usuarios aquí
+            };
+            // Función para mostrar el modal de contraseña
+            function mostrarModalContrasena() {
+                modal.style.display = "block";
+                passwordInput.value = ""; // Limpiar el campo de contraseña
             }
-        });
+            // Agregar un evento al botón "Ingresar" del modal y al teclado virtual
+            passwordSubmit.addEventListener("click", function () {
+                verificarContraseña();
+            });
+            // Agregar un evento para manejar los clics en el teclado virtual
+            const virtualKeys = document.querySelectorAll('.virtual-key');
+            virtualKeys.forEach(key => {
+                key.addEventListener("click", function () {
+                    const keyNumber = key.getAttribute("data-key");
+                    passwordInput.value += keyNumber;
+                });
+            });
+            // Permitir ingresar la contraseña al presionar Enter
+            passwordInput.addEventListener("keyup", function (event) {
+                if (event.key === "Enter") {
+                    verificarContraseña();
+                }
+            });
+            function verificarContraseña() {
+                const password = passwordInput.value;
+                if (passwords[userId] && password === passwords[userId]) {
+                    // La contraseña es correcta, ocultar el modal y mostrar el contenido del usuario
+                    modal.style.display = "none";
+                    mostrarInformacionUsuario(parseInt(userId));
+                } else {
+                    // La contraseña es incorrecta
+                    alert("Contraseña incorrecta. Por favor, inténtelo de nuevo.");
+                }
+            }
+            // Mostrar el modal al cargar la página
+            mostrarModalContrasena();
+        }
     </script>
 </body>
 </html>
