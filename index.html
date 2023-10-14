@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Empleados</title>
     <link rel="icon" href="logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,27 +21,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 80%; /* Ancho aumentado para mejorar el espacio */
-            max-width: 800px; /* Límite de ancho para una buena legibilidad */
+            width: 80%;
+            max-width: 800px;
         }
 
-        .form-container, .table-container {
-            width: 100%; /* Ocupan todo el ancho disponible */
+        .login-container, .content-container {
+            width: 100%;
             padding: 20px;
-            margin: 10px 0; /* Espacio superior e inferior */
+            margin: 10px 0;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        form {
+        form, .login-form {
             display: flex;
             flex-direction: column;
         }
 
-        form input, form button {
-            margin: 10px 0; /* Espacio superior e inferior */
-            padding: 10px; /* Espacio interno aumentado */
-            border: 1px solid #ccc; /* Borde para resaltar los campos */
+        form input, form button, .login-input, .login-button {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .login-input, .login-button {
+            margin: 10px 0;
         }
 
         table {
@@ -50,11 +55,10 @@
 
         th, td {
             border: 1px solid #ccc;
-            padding: 10px; /* Espacio interno aumentado para mayor legibilidad */
+            padding: 10px;
         }
 
-        /* Estilos adicionales para el botón */
-        button {
+        button, .login-button {
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -63,53 +67,161 @@
             border-radius: 5px;
         }
 
-        button:hover {
+        button:hover, .login-button:hover {
             background-color: #0056b3;
+        }
+
+        .qr-code {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Estilos para el botón de ejecutivos */
+        .executives-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .executives-button:hover {
+            background-color: #0056b3;
+        }
+
+        .lock-icon {
+            margin-right: 10px;
+            transition: transform 0.5s, color 0.5s;
+        }
+
+        .lock-opened {
+            transform: rotate(45deg);
+            color: #2ecc71;
+        }
+
+        /* Estilos para el cuadro de diálogo de contraseña */
+        .password-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="form-container">
+        <div class="login-container" id="login-container">
+            <h2>Login</h2>
+            <form class="login-form" id="login-form">
+                <input type="text" id="login-username" class="login-input" placeholder="Usuario">
+                <input type="password" id="login-password" class="login-input" placeholder="Contraseña">
+                <button type="button" id="login-button" class="login-button">Ingresar</button>
+            </form>
+        </div>
+        
+        <div class="content-container hidden" id="employee-form-container">
             <h2>Registro de Empleados</h2>
             <form id="employee-form">
                 <input type="text" id="name" placeholder="Nombre">
                 <input type="text" id="jobTitle" placeholder="Cargo">
                 <input type="text" id="idNumber" placeholder="Número de Identificación">
-                <button type="submit">Registrar</button>
+                <button type="button" id="register-button" class="login-button">Registrar</button>
+                <table id="employee-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cargo</th>
+                            <th>Número de Identificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </form>
         </div>
-        <div class="table-container">
-            <table id="employee-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cargo</th>
-                        <th>Número de Identificación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            
+        <!-- Botón para ejecutivos con candado -->
+        <button class="executives-button" id="executives-button"><i class="fas fa-lock lock-icon"></i> Solo Ejecutivos</button>
+        
+        <!-- Cuadro de diálogo de contraseña -->
+        <div class="password-dialog" id="password-dialog">
+            <h2>Ingrese la contraseña de 4 dígitos</h2>
+            <input type="password" id="executives-password" placeholder="Contraseña">
+            <button type="button" id="unlock-button" class="login-button">Desbloquear</button>
+            <p id="password-info" class="hidden">Contraseña correcta. Puede ingresar.</p>
         </div>
-        <!-- Agrega el botón "Solo Ejecutivos" que redirige a otra página -->
-        <button onclick="window.location.href = 'Ejecutivos.html'">Solo Ejecutivos</button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.1/qrcode.js"></script>
     <script>
         // Obtener elementos del DOM
+        const loginForm = document.getElementById("login-form");
+        const loginButton = document.getElementById("login-button");
+        const loginUsername = document.getElementById("login-username");
+        const loginPassword = document.getElementById("login-password");
         const employeeForm = document.getElementById("employee-form");
-        const employeeTable = document.querySelector("table tbody");
+        const registerButton = document.getElementById("register-button");
+        const executivesButton = document.getElementById("executives-button");
+        const lockIcon = document.querySelector(".lock-icon");
+        const passwordInfo = document.getElementById("password-info");
+        
+        // Cuadro de diálogo de contraseña
+        const passwordDialog = document.getElementById("password-dialog");
+        const unlockButton = document.getElementById("unlock-button");
+        const executivesPassword = document.getElementById("executives-password");
 
         // Crear un arreglo para almacenar los empleados
         const employees = [];
 
-        // Agregar evento al formulario
-        employeeForm.addEventListener("submit", function (e) {
-            e.preventDefault();
+        // Variable para controlar si los ejecutivos están desbloqueados
+        let executivesUnlocked = false;
 
-            // Obtener los valores del formulario
+        // Agregar evento para el botón de login
+        loginButton.addEventListener("click", function () {
+            // Agregar lógica de autenticación aquí
+            // Esto es solo un ejemplo básico
+            const username = loginUsername.value;
+            const password = loginPassword.value;
+
+            // Contraseñas del login
+            const usuarios = ["Luis","Sara"];
+            const contrasenas = ["12345", "54321"];
+
+         
+            const index = usuarios.indexOf(username);
+            if (index !== -1 && contrasenas[index] === password) {
+            
+                const loginContainer = document.getElementById("login-container");
+                loginContainer.style.display = "none";
+
+                // Muestra el contenido adicional
+                const contentContainers = document.querySelectorAll(".content-container");
+                contentContainers.forEach((container) => {
+                    container.style.display = "block";
+                });
+
+                // Muestra el botón "Solo Ejecutivos" si los ejecutivos están desbloqueados
+                if (executivesUnlocked) {
+                    executivesButton.style.display = "block";
+                }
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        });
+
+        // Agregar evento para el botón de registro
+        registerButton.addEventListener("click", function () {
+            // Obtener los valores del formulario de registro
             const name = document.getElementById("name").value;
             const jobTitle = document.getElementById("jobTitle").value;
             const idNumber = document.getElementById("idNumber").value;
@@ -130,8 +242,40 @@
             }
         });
 
+        // Agregar evento para el botón de ejecutivos
+        executivesButton.addEventListener("click", function () {
+            if (executivesUnlocked) {
+                // Redirigir a la página de ejecutivos
+                window.location.href = "Ejecutivos.html"
+            } else {
+                // Mostrar el cuadro de diálogo de contraseña
+                passwordDialog.style.display = "block";
+            }
+        });
+
+        // Contraseña del boton de ejecutivos
+        unlockButton.addEventListener("click", function () {
+            const password = executivesPassword.value;
+ 
+            if (password === "1234") {
+           
+                passwordDialog.style.display = "none";
+          
+                executivesUnlocked = true;
+         
+                executivesButton.style.display = "block";
+    
+                lockIcon.classList.add("lock-opened");
+                // Mostrar el mensaje de contraseña correcta
+                passwordInfo.style.display = "block";
+            } else {
+                alert("Contraseña incorrecta");
+            }
+        });
+
         // Actualizar la tabla de empleados
         function updateTable() {
+            const employeeTable = document.querySelector("table tbody");
             employeeTable.innerHTML = "";
             employees.forEach((employee) => {
                 const row = document.createElement("tr");

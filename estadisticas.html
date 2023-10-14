@@ -271,21 +271,21 @@
             });
         }
 
-        // Obtén el parámetro "userId" de la URL
+     
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get("userId");
 
         if (userId) {
-            // Llama a la función para mostrar la información del usuario seleccionado
+         
             mostrarInformacionUsuario(parseInt(userId));
         }
 
-        // Agregar un evento para mostrar el modal de contraseña
+    
         if (userId) {
             const modal = document.getElementById("password-modal");
             const passwordInput = document.getElementById("password-input");
             const passwordSubmit = document.getElementById("password-submit");
-            // Configurar contraseñas de ejemplo para cada usuario
+            // Contraseñas
             const passwords = {
                 "1": "12345",
                 "2": "54321",
@@ -294,18 +294,18 @@
                 "5": "33330",
                 "6": "88880",
                 "7": "11112",
-                // Agrega las contraseñas para otros usuarios aquí
+       
             };
-            // Función para mostrar el modal de contraseña
+        
             function mostrarModalContrasena() {
                 modal.style.display = "block";
-                passwordInput.value = ""; // Limpiar el campo de contraseña
+                passwordInput.value = ""; 
             }
-            // Agregar un evento al botón "Ingresar" del modal y al teclado virtual
+  
             passwordSubmit.addEventListener("click", function () {
                 verificarContraseña();
             });
-            // Agregar un evento para manejar los clics en el teclado virtual
+   
             const virtualKeys = document.querySelectorAll('.virtual-key');
             virtualKeys.forEach(key => {
                 key.addEventListener("click", function () {
@@ -313,7 +313,7 @@
                     passwordInput.value += keyNumber;
                 });
             });
-            // Permitir ingresar la contraseña al presionar Enter
+        
             passwordInput.addEventListener("keyup", function (event) {
                 if (event.key === "Enter") {
                     verificarContraseña();
