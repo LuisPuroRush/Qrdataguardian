@@ -1,292 +1,446 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Empleados</title>
+    <title>Bienvenidos A Nuestro Proyecto</title>
     <link rel="icon" href="logo.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 80%;
-            max-width: 800px;
-        }
-
-        .login-container, .content-container {
-            width: 100%;
-            padding: 20px;
-            margin: 10px 0;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        form, .login-form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        form input, form button, .login-input, .login-button {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .login-input, .login-button {
-            margin: 10px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        button, .login-button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-
-        button:hover, .login-button:hover {
-            background-color: #0056b3;
-        }
-
-        .qr-code {
-            margin-top: 10px;
-            max-width: 100%;
-            height: auto;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Estilos para el botón de ejecutivos */
-        .executives-button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-
-        .executives-button:hover {
-            background-color: #0056b3;
-        }
-
-        .lock-icon {
-            margin-right: 10px;
-            transition: transform 0.5s, color 0.5s;
-        }
-
-        .lock-opened {
-            transform: rotate(45deg);
-            color: #2ecc71;
-        }
-
-        /* Estilos para el cuadro de diálogo de contraseña */
-        .password-dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            display: none;
-        }
-    </style>
 </head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+    * {
+        font-family: "poppins", sans-serif;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #bg-video {
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        object-fit: cover;
+    }
+
+    section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        width: 100%;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .box {
+        position: relative;
+        width: 400px;
+        height: 450px;
+        display: flex;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    h2 {
+        font-size: 2em;
+        color: rgb(255, 255, 255);
+        text-align: center;
+    }
+
+    .input-field {
+        position: relative;
+        margin: 30px 0;
+        width: 310px;
+        border-bottom: 2px solid white;
+    }
+
+    .input-field label {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translate(-50);
+        color: white;
+        font-size: 1em;
+        pointer-events: none;
+        transition: .5s;
+    }
+
+    input:focus ~label,
+    input:valid ~ label {
+        top: -5px;
+    }
+
+    .input-field input {
+        width: 100%;
+        height: 50px;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 1em;
+        padding: 0 35px 0 5px;
+        color: rgb(255, 255, 255);
+    }
+
+    .input-field ion-icon {
+        position: absolute;
+        right: 8px;
+        color: rgb(255, 255, 255);
+        font-size: 1.2em;
+        top: 20px;
+    }
+
+    .forget {
+        margin: -15px 0 15px;
+        font-size: small;
+        color: rgb(255, 255, 255);
+        display: flex;
+        justify-content: center;
+    }
+
+    .forget label input {
+        margin-right: 3px;
+    }
+
+    .forget label a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .forget label a:hover {
+        text-decoration: underline;
+    }
+
+    button {
+        width: 100%;
+        height: 40px;
+        border-radius: 40px;
+        background: #ffffff;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+    }
+
+    button:hover {
+        box-shadow: 1px 5px 7px 1px rgba(241, 214, 94, 0.966); 
+    }
+
+    .register {
+        font-size: .9em;
+        color: #ffffff;
+        text-align: center;
+        margin: 25px 0 10px;
+    }
+
+    .register p a {
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .register p a:hover {
+        text-decoration: underline;
+    }
+
+    .welcome-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        backdrop-filter: blur(5px);
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .welcome-container.active {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .welcome-container img {
+        width: 100px; /* Tamaño de la imagen del logo */
+        height: auto;
+    }
+
+    .welcome-text {
+        text-align: center;
+    }
+
+    .continue-button {
+        background: transparent;
+        color: #000;
+        font-size: 14px;
+        border: none;
+        border-radius: 20px; /* Borde redondeado en todos los lados */
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        width: 120px;
+        user-select: none; /* Evita la selección de contenido y, por lo tanto, elimina el resaltado */
+    }
+
+    .continue-button ion-icon {
+        margin-left: 5px;
+        font-size: 18px;
+    }
+
+    .continue-button:hover {
+        background: transparent;
+    }
+
+
+/* Estilos para el botón "Solo Ejecutivos" */
+.executives-button {
+    position: fixed;
+    top: 20px; /* Ajusta la distancia desde la parte superior según tu preferencia */
+    right: 20px; /* Ajusta la distancia desde la derecha según tu preferencia */
+    background-color: transparent; /* Fondo transparente */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 5px; /* Ajusta el tamaño del botón, ahora es un 20% del ancho de su contenedor */
+    width: 10%; /* Ajusta el ancho al 20% */
+    border-radius: 5px;
+    z-index: 999; /* Asegura que esté en la parte superior */
+    opacity: 1; /* Mostrar el botón */
+    transition: opacity 0.5s;
+    font-size: 12px; /* Ajusta el tamaño de la fuente */
+}
+/* Estilos para el cuadro de diálogo */
+.password-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.password-input {
+    width: 80px;
+    height: 30px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.submit-password {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-password:hover {
+    background: #0056b3;
+}
+
+
+
+    .executives-button.visible {
+        opacity: 1;
+    }
+    .key {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        font-size: 20px;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .key:hover {
+        background: #0056b3;
+    }
+
+    #virtual-keyboard {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+</style>
 <body>
-    <div class="container">
-        <div class="login-container" id="login-container">
-            <h2>Login</h2>
-            <form class="login-form" id="login-form">
-                <input type="text" id="login-username" class="login-input" placeholder="Usuario">
-                <input type="password" id="login-password" class="login-input" placeholder="Contraseña">
-                <button type="button" id="login-button" class="login-button">Ingresar</button>
-            </form>
+    <div class="welcome-container">
+        <img src="logo.ico" alt="Logo de la empresa">
+        <div class="welcome-text">
+            <h1>Bienvenido a Qrdataguardian</h1>
+           <br>
         </div>
-        
-        <div class="content-container hidden" id="employee-form-container">
-            <h2>Registro de Empleados</h2>
-            <form id="employee-form">
-                <input type="text" id="name" placeholder="Nombre">
-                <input type="text" id="jobTitle" placeholder="Cargo">
-                <input type="text" id="idNumber" placeholder="Número de Identificación">
-                <button type="button" id="register-button" class="login-button">Registrar</button>
-                <table id="employee-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Cargo</th>
-                            <th>Número de Identificación</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </form>
+        <button id="close-button" class="continue-button">
+            Continuar <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>    
+    </div>    
+    <section>
+        <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
+        <div class="box">
+            <div class="form-value">
+                <form action="" id="login-form">
+                    <h2>Login</h2>
+                    <div class="input-field">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" id="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="password" required>
+                        <label for="password">Contraseña</label>
+                    </div>
+                    <div class="forget">
+                        <label for="privacy"><input type="checkbox" id="privacy">Leíste nuestras <a href="#">políticas de privacidad.</a></label>
+                    </div>
+                    <button type="button" id="login-button">Iniciar Sesión</button>
+                    <div class="register">
+                        <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- Botón para ejecutivos con candado -->
-        <button class="executives-button" id="executives-button"><i class="fas fa-lock lock-icon"></i> Solo Ejecutivos</button>
-        
-        <!-- Cuadro de diálogo de contraseña -->
-        <div class="password-dialog" id="password-dialog">
-            <h2>Ingrese la contraseña de 4 dígitos</h2>
-            <input type="password" id="executives-password" placeholder="Contraseña">
-            <button type="button" id="unlock-button" class="login-button">Desbloquear</button>
-            <p id="password-info" class="hidden">Contraseña correcta. Puede ingresar.</p>
+        <button id="executives-button" class="executives-button">
+            Solo Ejecutivos <ion-icon name="lock-closed-outline"></ion-icon>
+        </button>
+    </section>
+    <div id="password-dialog" class="password-dialog" style="display: none;">
+        <h2 style="color: #000;">Por favor, ingrese una contraseña de 4 dígitos:</h2>
+        <input type="password" id="password-input" class="password-input" maxlength="4">
+        <div id="virtual-keyboard">
+            <button class="key" onclick="appendToPassword('1')">1</button>
+            <button class="key" onclick="appendToPassword('2')">2</button>
+            <button class="key" onclick="appendToPassword('3')">3</button>
+            <button class="key" onclick="appendToPassword('4')">4</button>
+            <button class="key" onclick="appendToPassword('5')">5</button>
+            <button class="key" onclick="appendToPassword('6')">6</button>
+            <button class="key" onclick="appendToPassword('7')">7</button>
+            <button class="key" onclick="appendToPassword('8')">8</button>
+            <button class="key" onclick="appendToPassword('9')">9</button>
+            <button class="key" onclick="appendToPassword('0')">0</button>
         </div>
+        <button id="submit-password" class="submit-password">Aceptar</button>
     </div>
-    <script>
-        // Obtener elementos del DOM
-        const loginForm = document.getElementById("login-form");
-        const loginButton = document.getElementById("login-button");
-        const loginUsername = document.getElementById("login-username");
-        const loginPassword = document.getElementById("login-password");
-        const employeeForm = document.getElementById("employee-form");
-        const registerButton = document.getElementById("register-button");
-        const executivesButton = document.getElementById("executives-button");
-        const lockIcon = document.querySelector(".lock-icon");
-        const passwordInfo = document.getElementById("password-info");
-        
-        // Cuadro de diálogo de contraseña
-        const passwordDialog = document.getElementById("password-dialog");
-        const unlockButton = document.getElementById("unlock-button");
-        const executivesPassword = document.getElementById("executives-password");
-
-        // Crear un arreglo para almacenar los empleados
-        const employees = [];
-
-        // Variable para controlar si los ejecutivos están desbloqueados
-        let executivesUnlocked = false;
-
-        // Agregar evento para el botón de login
-        loginButton.addEventListener("click", function () {
-            // Agregar lógica de autenticación aquí
-            // Esto es solo un ejemplo básico
-            const username = loginUsername.value;
-            const password = loginPassword.value;
-
-            // Contraseñas del login
-            const usuarios = ["Luis","Sara"];
-            const contrasenas = ["12345", "54321"];
-
-         
-            const index = usuarios.indexOf(username);
-            if (index !== -1 && contrasenas[index] === password) {
-            
-                const loginContainer = document.getElementById("login-container");
-                loginContainer.style.display = "none";
-
-                // Muestra el contenido adicional
-                const contentContainers = document.querySelectorAll(".content-container");
-                contentContainers.forEach((container) => {
-                    container.style.display = "block";
-                });
-
-                // Muestra el botón "Solo Ejecutivos" si los ejecutivos están desbloqueados
-                if (executivesUnlocked) {
-                    executivesButton.style.display = "block";
-                }
-            } else {
-                alert("Usuario o contraseña incorrectos");
-            }
-        });
-
-        // Agregar evento para el botón de registro
-        registerButton.addEventListener("click", function () {
-            // Obtener los valores del formulario de registro
-            const name = document.getElementById("name").value;
-            const jobTitle = document.getElementById("jobTitle").value;
-            const idNumber = document.getElementById("idNumber").value;
-
-            // Validar que se ingresen todos los campos
-            if (name && jobTitle && idNumber) {
-                // Crear un objeto de empleado
-                const employee = { name, jobTitle, idNumber };
-                employees.push(employee);
-
-                // Limpiar el formulario
-                employeeForm.reset();
-
-                // Actualizar la tabla
-                updateTable();
-            } else {
-                alert("Por favor, complete todos los campos.");
-            }
-        });
-
-        // Agregar evento para el botón de ejecutivos
-        executivesButton.addEventListener("click", function () {
-            if (executivesUnlocked) {
-                // Redirigir a la página de ejecutivos
-                window.location.href = "Ejecutivos.html"
-            } else {
-                // Mostrar el cuadro de diálogo de contraseña
-                passwordDialog.style.display = "block";
-            }
-        });
-
-        // Contraseña del boton de ejecutivos
-        unlockButton.addEventListener("click", function () {
-            const password = executivesPassword.value;
- 
-            if (password === "1234") {
-           
-                passwordDialog.style.display = "none";
-          
-                executivesUnlocked = true;
-         
-                executivesButton.style.display = "block";
     
-                lockIcon.classList.add("lock-opened");
-                // Mostrar el mensaje de contraseña correcta
-                passwordInfo.style.display = "block";
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+        document.getElementById("login-button").addEventListener("click", function() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const privacy = document.getElementById("privacy").checked;
+
+            // Comprueba las credenciales
+            if (email === "Luis" && password === "1234" && privacy) {
+                alert("Bienvenido, Luis. Has iniciado sesión con éxito.");
+                // Aquí puedes redirigir a otra página si es necesario
+            } else if (email === "Sara" && password === "4321" && privacy) {
+                alert("Bienvenida, Sara. Has iniciado sesión con éxito.");
+                // Aquí puedes redirigir a otra página si es necesario
             } else {
-                alert("Contraseña incorrecta");
+                alert("Credenciales incorrectas o no has aceptado nuestras políticas de privacidad.");
             }
         });
 
-        // Actualizar la tabla de empleados
-        function updateTable() {
-            const employeeTable = document.querySelector("table tbody");
-            employeeTable.innerHTML = "";
-            employees.forEach((employee) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${employee.name}</td>
-                    <td>${employee.jobTitle}</td>
-                    <td>${employee.idNumber}</td>
-                `;
-                employeeTable.appendChild(row);
-            });
+        // Mostrar el contenedor de bienvenida al cargar la página
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".welcome-container").classList.add("active");
+        });
+
+        // Cerrar el contenedor de bienvenida al hacer clic en el botón de cierre
+        document.getElementById("close-button").addEventListener("click", function () {
+            const welcomeContainer = document.querySelector(".welcome-container");
+            welcomeContainer.classList.remove("active");
+            setTimeout(function () {
+                welcomeContainer.style.display = "none";
+                const executivesButton = document.getElementById("executives-button");
+                executivesButton.classList.add("visible");
+            }, 500); // 500ms para que termine la animación de cierre
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".welcome-container").classList.add("active");
+        });
+
+        // Cerrar el contenedor de bienvenida y mostrar el botón "Solo Ejecutivos" al hacer clic en "Continuar"
+        document.getElementById("close-button").addEventListener("click", function () {
+            const welcomeContainer = document.querySelector(".welcome-container");
+            welcomeContainer.classList.remove("active");
+            setTimeout(function () {
+                welcomeContainer.style.display = "none";
+                const executivesButton = document.getElementById("executives-button");
+                executivesButton.style.opacity = 1;
+            }, 500); // 500ms para que termine la animación de cierre
+        });
+
+      // Agrega un evento click al botón "Solo Ejecutivos"
+document.getElementById("executives-button").addEventListener("click", function() {
+    const passwordDialog = document.getElementById("password-dialog");
+    passwordDialog.style.display = "block";
+});
+
+// Agrega un evento click al botón de enviar la contraseña
+document.getElementById("submit-password").addEventListener("click", function() {
+    const passwordInput = document.getElementById("password-input");
+    const enteredPassword = passwordInput.value;
+
+    if (enteredPassword === "1234") { // Reemplaza con tu contraseña
+        // Contraseña correcta, redirige a Ejecutivos.html
+        window.location.href = "Ejecutivos.html";
+    } else {
+        alert("Contraseña incorrecta. Inténtalo de nuevo.");
+    }
+});
+function appendToPassword(value) {
+        const passwordInput = document.getElementById("password-input");
+        passwordInput.value += value;
+    }
+
+    function submitPassword() {
+        // Aquí puedes realizar la validación de la contraseña ingresada
+        const enteredPassword = document.getElementById("password-input").value;
+        if (enteredPassword === "1234") {
+            // Contraseña correcta, redirige a la página de ejecutivos
+            window.location.href = "Ejecutivos.html";
+        } else {
+            alert("Contraseña incorrecta. Inténtalo de nuevo.");
         }
+    }
+
+    // Escucha el evento "keydown" para detectar la tecla "Enter" y enviar la contraseña
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            submitPassword();
+        }
+    });
     </script>
 </body>
 </html>
