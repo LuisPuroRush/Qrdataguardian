@@ -147,7 +147,6 @@
              
                 </div>
             </div>
-            <!-- Agrega más círculos para otros usuarios aquí -->
             <div class="circle">
                 <img src="usuario1.jpg" alt="Usuario 3">
                 <div class="user-info">
@@ -214,7 +213,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Configuración de los gráficos
         const gastosData = {
             labels: ["Alquiler", "Comida", "Transporte", "Entretenimiento", "Otros"],
             datasets: [{
@@ -239,20 +237,14 @@
                 borderWidth: 1
             }]
         };
-
-        // Función para mostrar la información del usuario seleccionado
         function mostrarInformacionUsuario(userId) {
-            // Ocultar todos los círculos
             const circles = document.querySelectorAll('.circle');
             circles.forEach(circle => {
                 circle.classList.remove('active');
             });
 
-            // Mostrar solo el círculo del usuario seleccionado
             const userInfoContainer = document.querySelector('.circle:nth-child(' + userId + ')');
             userInfoContainer.classList.add('active');
-
-            // Inicializar y actualizar los gráficos
             const gastosChart = new Chart(document.getElementById('gastos-chart'), {
                 type: 'doughnut',
                 data: gastosData
@@ -285,7 +277,7 @@
             const modal = document.getElementById("password-modal");
             const passwordInput = document.getElementById("password-input");
             const passwordSubmit = document.getElementById("password-submit");
-            // Contraseñas
+
             const passwords = {
                 "1": "12345",
                 "2": "54321",
@@ -322,15 +314,15 @@
             function verificarContraseña() {
                 const password = passwordInput.value;
                 if (passwords[userId] && password === passwords[userId]) {
-                    // La contraseña es correcta, ocultar el modal y mostrar el contenido del usuario
+
                     modal.style.display = "none";
                     mostrarInformacionUsuario(parseInt(userId));
                 } else {
-                    // La contraseña es incorrecta
+
                     alert("Contraseña incorrecta. Por favor, inténtelo de nuevo.");
                 }
             }
-            // Mostrar el modal al cargar la página
+
             mostrarModalContrasena();
         }
     </script>
