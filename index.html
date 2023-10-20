@@ -330,8 +330,69 @@
         font-size: 1.5em;
         cursor: pointer;
     }
-</style>
 
+    .user-profile {
+    text-align: center;
+}
+
+#profile-image {
+    width: 150px; /* Ajusta el tamaño de la imagen según tus preferencias */
+    height: 150px;
+    border-radius: 50%; /* Hace que la imagen sea circular */
+    object-fit: cover;
+}
+
+#profile-name {
+    margin-top: 10px;
+    font-size: 1.5em; /* Ajusta el tamaño de la fuente según tus preferencias */
+}
+.profile-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+ 
+}
+
+.profile-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1; /* Coloca el contenedor del perfil sobre el video */
+    background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para el contenedor del perfil */
+}
+
+.profile-container {
+        display: none; /* Oculta el contenedor de perfil inicialmente */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .user-profile {
+        text-align: center;
+        padding: 20px;
+    }
+
+
+#profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#profile-name {
+    margin-top: 10px;
+    font-size: 1.5em;
+    color: #fff;
+}
+
+    </style>
+</head>
 <body>
     <div class="welcome-container">
         <img src="logo.ico" alt="Logo de la empresa">
@@ -345,63 +406,107 @@
     <section>
         <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
         <div class="box">
-            <div class="form-value">
-                <form action="" id="login-form">
-                    <h2>Login</h2>
-                    <div class="input-field">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="email" id="email" required>
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-field">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="password" id="password" required>
-                        <label for="password">Contraseña</label>
-                    </div>
-                    <div class="forget">
-                        <label for="privacy"><input type="checkbox" id="privacy">Leíste nuestras <a href="#">políticas de privacidad.</a></label>
-                    </div>
-                    <button type="button" id="login-button">Iniciar Sesión</button>
-                    <div class="register">
-                        <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
-                    </div>
-                </form>
+                <div class="form-value">
+                    <form action="" id="login-form">
+                        <h2>Login</h2>
+                        <div class="input-field">
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <input type="email" id="email" required>
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="input-field">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" id="password" required>
+                            <label for="password">Contraseña</label>
+                        </div>
+                        <div class="forget">
+                            <label for="privacy"><input type="checkbox" id="privacy">Leíste nuestras <a href="#">políticas de privacidad.</a></label>
+                        </div>
+                        <button type="button" id="login-button">Iniciar Sesión</button>
+                        <div class="register">
+                            <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+                        </div>
+                    </form>
+                </div>
+                
             </div>
         </div>
         <button id="executives-button" class="executives-button">
             Solo Ejecutivos <ion-icon name="lock-closed-outline"></ion-icon>
         </button>
     </section>
-
     <div class="blurry-background" id="blurry-background"></div>
-
     <div id="executives-dialog" class="executives-dialog">
         <span class="close-dialog" onclick="closeExecutivesDialog()">&times;</span>
         <p>Introduce la contraseña para acceder:</p>
         <input type="password" id="executives-password" class="password-input" maxlength="4">
         <button id="executives-enter-button" class="submit-password" onclick="enterExecutives()">Entrar</button>
     </div>
+    <div class="profile-container" id="profile-container">
+        <div class="box profile-box">
+            <div class="user-profile">
+                <img id="profile-image" src="luis.jpg" alt="Foto de perfil">
+                <h2 id="profile-name">Luis</h2>
+            </div>
+        </div>
+    </div>    
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script>
-        document.getElementById("login-button").addEventListener("click", function () {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const privacy = document.getElementById("privacy").checked;
+       document.getElementById("login-button").addEventListener("click", function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const privacy = document.getElementById("privacy").checked;
+    const profileContainer = document.getElementById("profile-container");
 
-            // Comprueba las credenciales
-            if (email === "Luis" && password === "1234" && privacy) {
-                alert("Bienvenido, Luis. Has iniciado sesión con éxito.");
-                // Aquí puedes redirigir a otra página si es necesario
-            } else if (email === "Sara" && password === "4321" && privacy) {
-                alert("Bienvenida, Sara. Has iniciado sesión con éxito.");
-                // Aquí puedes redirigir a otra página si es necesario
-            } else {
-                alert("Credenciales incorrectas o no has aceptado nuestras políticas de privacidad.");
-            }
-        });
+    if (email === "Luis" && password === "1234" && privacy) {
+        // Usuario Luis
+        hideLoginForm();
+        displayUserProfile("Luis"); // Muestra el perfil de Luis
+    } else if (email === "Sara" && password === "4321" && privacy) {
+        // Usuario Sara
+        hideLoginForm();
+        displayUserProfile("Sara"); // Muestra el perfil de Sara
+    } else {
+        alert("Credenciales incorrectas o no has aceptado nuestras políticas de privacidad.");
+    }
+});
+
+
+        function hideLoginForm() {
+            // Oculta el formulario de inicio de sesión
+            const loginForm = document.getElementById("login-form");
+            loginForm.style.display = "none";
+            // Oculta el botón de "Solo Ejecutivos"
+            const executivesButton = document.getElementById("executives-button");
+            executivesButton.style.display = "none";
+        }
+
+        function displayUserProfile(username) {
+    // Oculta el contenedor de bienvenida si está visible
+    const welcomeContainer = document.querySelector(".welcome-container");
+    welcomeContainer.style.display = "none";
+
+    // Cambia la imagen de perfil y el nombre según el usuario
+    const profileImage = document.getElementById("profile-image");
+    const profileName = document.getElementById("profile-name");
+    if (username === "Luis") {
+        profileImage.src = "luis.jpg"; // Ruta de la imagen de Luis
+        profileName.textContent = "Luis";
+    } else if (username === "Sara") {
+        profileImage.src = "sara.jpg"; // Ruta de la imagen de Sara
+        profileName.textContent = "Sara";
+    }
+
+    // Muestra el contenedor de perfil
+    const profileContainer = document.getElementById("profile-container");
+    profileContainer.style.display = "block";
+    // Puedes cargar y mostrar los gráficos correspondientes aquí
+    const profileCharts = document.querySelector(".profile-charts");
+    // Agrega código para mostrar los gráficos aquí
+}
 
         // Mostrar el contenedor de bienvenida al cargar la página
         document.addEventListener("DOMContentLoaded", function () {
@@ -414,8 +519,6 @@
             welcomeContainer.classList.remove("active");
             setTimeout(function () {
                 welcomeContainer.style.display = "none";
-                const executivesButton = document.getElementById("executives-button");
-                executivesButton.classList.add("visible");
             }, 500); // 500ms para que termine la animación de cierre
         });
 
@@ -451,6 +554,7 @@
             const blurryBackground = document.getElementById("blurry-background");
             blurryBackground.style.display = "none";
         }
+    </script>
     </script>
 </body>
 </html>
