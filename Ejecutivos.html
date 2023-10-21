@@ -9,19 +9,27 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             margin: 0;
+            background-color: black; /* Fondo oscuro */
+        }
+        #bg-video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
         .table-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
-            width: 1200px;
+            text-align: center;
         }
         .circle {
             width: 200px;
@@ -32,10 +40,12 @@
             align-items: center;
             border-radius: 20px;
             margin: 10px;
-            background-color: #fff;
+            background-color: transparent;
+            border: 2px solid white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             transition: transform 0.2s;
+            cursor: pointer; /* Cursor de mano */
         }
         .circle:hover {
             transform: scale(1.05);
@@ -49,6 +59,7 @@
         .user-info {
             text-align: center;
             padding: 15px;
+            color: white;
         }
         .circle button {
             background-color: #007bff;
@@ -64,70 +75,162 @@
         .title {
             font-size: 24px;
             margin-bottom: 20px;
-            font-family: 'Cursive', cursive; /* Cambio de fuente a cursive */
+            font-family: 'Cursive', cursive;
+            color: white;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            display: none;
+        }
+        .user-profile {
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .user-profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .user-profile .user-details {
+            margin-left: 20px;
+        }
+        .loading-container {
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .loading-container .role-details {
+            margin-left: 20px;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
+    <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
     <div class="title">Los ejecutivos de este proyecto</div>
     <div class="table-container">
-        <div class="circle">
-            <a href="estadisticas.html?userId=1">
-                <img src="Profesora.jpg" alt="Usuario 1">
-                <div class="user-info">
-                    <a>Leyva Corro</a>      
-                </div>
-            </a>
+        <div class="circle" onclick="showUserProfile('Leyva Corro', 'Gerente General', 1, 'Profesora.jpg')">
+            <img src="Profesora.jpg" alt="Usuario 1">
+            <div class="user-info">
+                <a>Leyva Corro</a>
+            </div>
         </div>
-        <div class="circle">
-            <a href="estadisticas.html?userId=2">
-                <img src="giovani.jpg" alt="Usuario 2">
-                <div class="user-info">
-                    <a>Gianfranco Bazán</a>
+    </div>
+    <div class="table-container">
+        <div class="circle" onclick="showUserProfile('Gianfranco Bazán', 'Diseñador', 2, 'giovani.jpg')">
+            <img src="giovani.jpg" alt="Usuario 2">
+            <div class ="user-info">
+                <a>Gianfranco Bazán</a>
+            </div>
+        </div>
+        <div class="circle" onclick="showUserProfile('Sergio Leyva', 'Encargado del Área de Trabajo', 3, 'usuario1.jpg')">
+            <img src="usuario1.jpg" alt="Usuario 3">
+            <div class="user-info">
+                <a>Sergio Leyva</a>
+            </div>
+        </div>
+        <div class="circle" onclick="showUserProfile('Deily Matos', 'Encargado de Comercialización', 4, 'usuario2.jpg')">
+            <img src="usuario2.jpg" alt="Usuario 4">
+            <div class="user-info">
+                <a>Deily Matos</a>
+            </div>
+        </div>
+    </div>
+    <div class="table-container">
+        <div class="circle" onclick="showUserProfile('Frank Aguilar', 'Encargado de Administración y Finanzas', 5, 'usuario3.jpg')">
+            <img src="usuario3.jpg" alt="Usuario 5">
+            <div class="user-info">
+                <a>Frank Aguilar</a>
+            </div>
+        </div>
+        <div class="circle" onclick="showUserProfile('Vanessa Genovés', 'Obrero y Ayudante', 6, 'usuario4.jpg')">
+            <img src="usuario4.jpg" alt="Usuario 6">
+            <div class="user-info">
+                <a>Vanessa Genovés</a>
+            </div>
+        </div>
+        <div class="circle" onclick="showUserProfile('Henry Ascencio', 'Publicista', 7, 'usuario5.jpg')">
+            <img src="usuario5.jpg" alt="Usuario 7">
+            <div class="user-info">
+                <a>Henry Ascencio</a>
+            </div>
+        </div>
+    </div>
 
-                </div>
-            </a>
+    <div class="overlay" id="profile-overlay">
+        <div class="loading-container" id="loading-container">
+            <img src="loading.gif" alt="Loading">
+            <div class="role-details">
+                <p>Cargando perfil...</p>
+            </div>
         </div>
-        <div class="circle">
-            <a href="estadisticas.html?userId=3">
-                <img src="usuario1.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <a>Sergio leyva</a>
-                </div>
-            </a>
+        <div class="user-profile" id="user-profile">
+            <img src="" id="user-image" alt="Usuario">
+            <div class="user-details">
+                <h2 id="user-name"></h2>
+                <p id="user-role"></p>
+            </div>
         </div>
-        <div class="circle">
-            <a href="estadisticas.html?userId=4">
-                <img src="usuario2.jpg" alt="Usuario 4">
-                <div class="user-info">
-                    <a>Deily Matos</a>
-                </div>
-            </a>
-        </div>
-        <div class="circle">
-            <a href="estadisticas.html?userId=5">
-                <img src="usuario3.jpg" alt="Usuario 5">
-                <div class="user-info">
-                    <a>Frank Aguilar</a>
+    </div>
 
-                </div>
-            </a>
-        </div>
-        <div class ="circle">
-            <a href="estadisticas.html?userId=6">
-                <img src="usuario4.jpg" alt="Usuario 6">
-                <div class="user-info">
-                    <a>Vanessa Genovés</a>
-                </div>
-            </a>
-        </div>
-        <div class="circle">
-            <a href="estadisticas.html?userId=7">
-                <img src="usuario5.jpg" alt="Usuario 7">
-                <div class="user-info">
-                    <a>Henry Ascencio</a>
-                </div>
-            </a>
-        </div>
+    <script>
+          function showUserProfile(userName, userRole, userId, imageSrc) {
+            const profileOverlay = document.getElementById("profile-overlay");
+            const userProfile = document.getElementById("user-profile");
+            const userImage = document.getElementById("user-image");
+            const userNameElement = document.getElementById("user-name");
+            const userRoleElement = document.getElementById("user-role");
+            const loadingContainer = document.getElementById("loading-container");
+
+            // Cambiar la imagen y detalles del usuario
+            userImage.src = imageSrc;
+            userNameElement.textContent = userName;
+            userRoleElement.textContent = userRole;
+
+            // Mostrar el overlay y la animación después de actualizar la imagen y los detalles
+            profileOverlay.style.display = "flex";
+            userProfile.style.animation = "slide-in 0.5s forwards";
+            loadingContainer.style.animation = "fade-in 0.5s forwards";
+
+            // Simular una carga con un temporizador
+            setTimeout(() => {
+                // Redirigir al perfil de usuario después de cargar
+                window.location.href = "estadisticas.html?userId=" + userId;
+            }, 2000); // Cambia este valor al tiempo de carga que desees
+        }
+    </script>
 </body>
 </html>
