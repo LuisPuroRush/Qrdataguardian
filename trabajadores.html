@@ -3,9 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Trabajadores</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
+<style>
+    /* Estilos para la página */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.7); /* Fondo transparente */
+    }
+
+    .user-info {
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        color: white;
+        width: 80%;
+        margin: 20px; /* Agregado para separar el perfil de la tabla */
+    }
+
+    .user-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    .user-name {
+        font-size: 1.2em;
+    }
+
+    .table-container {
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        width: 80%;
+        margin: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid white;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    button {
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    #chart-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-around;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.7); /* Fondo transparente */
+        padding: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+    }
+
+    .chart {
+        width: 45%;
+        margin-bottom: 20px;
+    }
+</style>
 <body>
-    
+    <section class="container">
+        <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
+        <div class="user-info">
+            <img src="ruta-de-la-imagen-del-usuario.jpg" alt="Imagen de Usuario" class="user-image">
+            <div>
+                <p class="user-name">Nombre del Usuario</p>
+            </div>
+        </div>
+        <div class="table-container">
+            <h1>Tabla de Ventas</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio (sin IGV)</th>
+                        <th>Cantidad</th>
+                        <th>IGV</th>
+                        <th>Precio Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Producto 1</td>
+                        <td>100</td>
+                        <td>2</td>
+                        <td>18</td>
+                        <td>236</td>
+                    </tr>
+                    <tr>
+                        <td>Producto 2</td>
+                        <td>75</td>
+                        <td>3</td>
+                        <td>13.5</td>
+                        <td>256.5</td>
+                    </tr>
+                    <!-- Puedes agregar más filas para otros productos -->
+                </tbody>
+            </table>
+            <button onclick="calcularGanancia()">Calcular Ganancia</button>
+        </div>
+        <div id="chart-container">
+            <div class="chart" id="chart1"></div>
+            <div class="chart" id="chart2"></div>
+            <div class="chart" id="chart3"></div>
+            <div class="chart" id="chart4"></div>
+        </div>
+    </section>
+    <script>
+       function calcularGanancia() {
+        const options1 = {
+            chart: {
+                type: 'bar',
+            },
+            series: [{
+                name: 'Ganancia',
+                data: [236, 256.5],
+            }],
+            xaxis: {
+                categories: ['Producto 1', 'Producto 2'],
+            },
+        };
+        const chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+        chart1.render();
+
+        const options2 = {
+            chart: {
+                type: 'donut',
+            },
+            series: [236, 256.5],
+            labels: ['Producto 1', 'Producto 2'],
+        };
+        const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+        chart2.render();
+
+        const options3 = {
+            chart: {
+                type: 'line',
+            },
+            series: [{
+                name: 'Ganancia',
+                data: [236, 256.5],
+            }],
+            xaxis: {
+                categories: ['Producto 1', 'Producto 2'],
+            },
+        };
+        const chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+        chart3.render();
+
+        const options4 = {
+            chart: {
+                type: 'area',
+            },
+            series: [{
+                name: 'Ganancia',
+                data: [236, 256.5],
+            }],
+            xaxis: {
+                categories: ['Producto 1', 'Producto 2'],
+            },
+        };
+        const chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+        chart4.render();
+    }
+    </script>
 </body>
 </html>
