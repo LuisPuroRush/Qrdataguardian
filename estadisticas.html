@@ -1,330 +1,466 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
-    <title>Estadísticas de Usuarios</title>
-    <link rel="icon" href="logo.ico" type="image/x-icon">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-        }
-        .user-container {
-            display: flex;
-            align-items: flex-start;
-        }
-        .circle-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 200px;
-            margin-left: 20px;
-        }
-        .circle {
-            width: 200px;
-            height: 260px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            margin: 10px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            transition: transform 0.2s;
-            display: none;
-        }
-        .circle.active {
-            display: flex;
-        }
-        .circle:hover {
-            transform: scale(1.05);
-        }
-        .circle img {
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .user-info {
-            text-align: center;
-            padding: 15px;
-        }
-        .circle button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            padding: 5px 10px;
-            margin-top: 10px;
-        }
-        .circle button:hover {
-            background-color: #0056b3;
-        }
-        .title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            font-family: 'Cursive', cursive;
-        }
-        .stats-container {
-            display: flex;
-            flex-direction: column;
-            margin-left: 20px;
-        }
-        .chart {
-            width: 300px;
-            height: 300px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .modal-content {
-            background-color: #fff;
-            text-align: center;
-            width: 300px;
-            padding: 20px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        input[type="password"] {
-            padding: 5px;
-            margin: 10px 0;
-        }
-        .forgot-password {
-            margin: 10px 0;
-        }
-        .virtual-keyboard {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .virtual-key {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            margin: 5px;
-        }
-    </style>
+    <title>estadisticas</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
+<style>
+    /* Estilos para la página */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.7); /* Fondo transparente */
+    }
+
+    .user-info {
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        color: white;
+        width: 80%;
+        margin: 20px; /* Agregado para separar el perfil de la tabla */
+    }
+
+    .user-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    .user-name {
+        font-size: 1.2em;
+    }
+
+    .table-container {
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        width: 80%;
+        margin: 20px;
+        overflow-x: auto; /* Barra de desplazamiento horizontal */
+    }
+
+    table {
+        max-width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid white;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    button {
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    #chart-container {
+        display: none; /* Ocultar los gráficos al inicio */
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-around;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.7); /* Fondo transparente */
+        padding: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.663);
+        border-radius: 20px;
+        margin-top: 20px;
+    }
+
+    .chart {
+        width: 45%;
+        margin-bottom: 20px;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    select, input {
+        padding: 10px;
+        border: 1px solid white;
+        border-radius: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        width: calc(100% - 16px);
+        margin-right: 16px;
+    }
+    #profile-image {
+    width: 100px; /* Ajusta el ancho según tus preferencias */
+    height: 100px; /* Ajusta la altura según tus preferencias */
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    /* Otros estilos según tus preferencias */
+}
+
+</style>
 <body>
-    <div class="title">Los ejecutivos de este proyecto</div>
-    <div class="user-container">
-        <div class="circle-container">
-            <div class="circle active">
-                <img src="Profesora.jpg" alt="Usuario 1">
-                <div class="user-info">
-                    <p>Leyva Corro</p>
-          
-                </div>
-            </div>
-            <div class="circle">
-                <img src="giovani.jpg" alt="Usuario 2">
-                <div class="user-info">
-                    <p>Gianfranco Bazán</p>
-             
-                </div>
-            </div>
-            <div class="circle">
-                <img src="usuario1.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <p>Sergio leyva</p>
-                </div>
-            </div>
-            <div class="circle">
-                <img src="usuario2.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <p>Deily Matos</p>
-
-                </div>
-            </div>
-            <div class="circle">
-                <img src="usuario3.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <p>Frank Aguilar</p>
-
-                </div>
-            </div>
-            <div class="circle">
-                <img src="usuario4.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <p>Vanessa Genovés</p>
-
-                </div>
-            </div>
-            <div class="circle">
-                <img src="usuario5.jpg" alt="Usuario 3">
-                <div class="user-info">
-                    <p>Henry Ascencio</p>
-                </div>
-            </div>
+    <section class="container">
+        <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
+        <div class="user-profile-container">
+            <img id="profile-image" src="" alt="Imagen de perfil">
+            <p id="profile-name">Nombre de usuario</p>
+        </div>        
         </div>
-        <div class="stats-container">
-            <h3>Reporte de Gastos</h3>
-            <canvas class="chart" id="gastos-chart"></canvas>
-            <h3>Balance de Estado de Cuenta</h3>
-            <canvas class="chart" id="balance-chart"></canvas>
-        </div>
-    </div>
-    <div id="password-modal" class="modal">
-        <div class="modal-content">
-            <h2>Ingrese su contraseña</h2>
-            <input type="password" id="password-input" maxlength="5">
-            <br>
-            <button id="password-submit">Ingresar</button>
-            <div class="forgot-password">
-                <a href="#">¿Olvidaste tu contraseña?</a>
+        <div class="table-container">
+            <h1>Tabla de Ventas</h1>
+            <div class="input-container">
+                <button id="start-button" onclick="empezarAgregar()">Empezar</button>
+                <button id="stop-button" onclick="detenerAgregar()" style="display: none;">Calcular</button>
             </div>
-            <div class="virtual-keyboard">
-                <div class="virtual-key" data-key="1">1</div>
-                <div class="virtual-key" data-key="2">2</div>
-                <div class="virtual-key" data-key="3">3</div>
-                <div class="virtual-key" data-key="4">4</div>
-                <div class="virtual-key" data-key="5">5</div>
-                <div class="virtual-key" data-key="6">6</div>
-                <div class="virtual-key" data-key="7">7</div>
-                <div class="virtual-key" data-key="8">8</div>
-                <div class="virtual-key" data-key="9">9</div>
-                <div class="virtual-key" data-key="0">0</div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio (sin IGV)</th>
+                        <th>Lugar</th>
+                        <th>Fecha de Entrega</th>
+                        <th>Fecha de Salida</th>
+                        <th>Cantidad</th>
+                        <th>IGV</th>
+                        <th>Precio Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <!-- Filas de la tabla se agregarán dinámicamente -->
+                </tbody>
+            </table>
+            <button onclick="calcularGanancia()">Calcular Ganancia</button>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const gastosData = {
-            labels: ["Alquiler", "Comida", "Transporte", "Entretenimiento", "Otros"],
-            datasets: [{
-                data: [200, 300, 150, 100, 50],
-                backgroundColor: ["#FF5733", "#FFC300", "#33FF57", "#3365FF", "#FF33FF"]
-            }]
-        };
+        <div id="chart-container">
+            <div class="chart" id="chart1"></div>
+            <div class="chart" id="chart2"></div>
+            <div class="chart" id="chart3"></div>
+            <div class="chart" id="chart4"></div>
+            <div class="chart" id="chart5"></div>
+            <div class="chart" id="chart6"></div>
+        </div>
+        
+        <script>
+             let addingData = false;
 
-        const balanceData = {
-            labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-            datasets: [{
-                label: "Ingresos",
-                data: [1000, 1200, 1100, 900, 1050],
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1
-            }, {
-                label: "Gastos",
-                data: [400, 500, 450, 300, 350],
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1
-            }]
-        };
-        function mostrarInformacionUsuario(userId) {
-            const circles = document.querySelectorAll('.circle');
-            circles.forEach(circle => {
-                circle.classList.remove('active');
-            });
+function empezarAgregar() {
+    addingData = true;
+    document.getElementById("start-button").style.display = "none";
+    document.getElementById("stop-button").style.display = "block";
+    agregarFila();
+}
 
-            const userInfoContainer = document.querySelector('.circle:nth-child(' + userId + ')');
-            userInfoContainer.classList.add('active');
-            const gastosChart = new Chart(document.getElementById('gastos-chart'), {
-                type: 'doughnut',
-                data: gastosData
-            });
+function detenerAgregar() {
+    addingData = false;
+    document.getElementById("stop-button").style.display = "none";
+    document.getElementById("start-button").style.display = "block";
+}
 
-            const balanceChart = new Chart(document.getElementById('balance-chart'), {
-                type: 'bar',
-                data: balanceData,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+function agregarFila() {
+    if (addingData) {
+        const table = document.getElementById("tabla-body");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td><input type="text" placeholder="Producto"></td>
+            <td><input type="number" placeholder="Precio"></td>
+            <td class="autocomplete-container">
+                <input type="text" placeholder="Lugar">
+                <div class="autocomplete"></div>
+            </td>
+            <td><input type="date"></td>
+            <td><input type="date"></td>
+            <td><input type="number" placeholder="Cantidad"></td>
+            <td><input type="number" placeholder="IGV"></td>
+            <td><input type="number" placeholder="Precio Total"></td>
+        `;
+        table.appendChild(newRow);
+
+        // Manejar la pulsación de Enter para agregar una nueva fila
+        const inputs = newRow.querySelectorAll("input");
+        inputs.forEach((input, index) => {
+            input.addEventListener("keyup", (e) => {
+                if (e.key === "Enter" && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                } else if (e.key === "Enter" && index === inputs.length - 1) {
+                    agregarFila();
                 }
             });
-        }
+        });
 
-     
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get("userId");
+        // Configura la función de autocompletado
+        const lugarInput = newRow.querySelector('input[placeholder="Lugar"]');
+        const autocomplete = newRow.querySelector('.autocomplete');
+        lugarInput.addEventListener('input', (e) => {
+            const inputValue = e.target.value;
+            autocomplete.innerHTML = '';
 
-        if (userId) {
-         
-            mostrarInformacionUsuario(parseInt(userId));
-        }
-
-    
-        if (userId) {
-            const modal = document.getElementById("password-modal");
-            const passwordInput = document.getElementById("password-input");
-            const passwordSubmit = document.getElementById("password-submit");
-
-            const passwords = {
-                "1": "12345",
-                "2": "54321",
-                "3": "11110",
-                "4": "55550",
-                "5": "33330",
-                "6": "88880",
-                "7": "11112",
-       
-            };
-        
-            function mostrarModalContrasena() {
-                modal.style.display = "block";
-                passwordInput.value = ""; 
-            }
-  
-            passwordSubmit.addEventListener("click", function () {
-                verificarContraseña();
-            });
-   
-            const virtualKeys = document.querySelectorAll('.virtual-key');
-            virtualKeys.forEach(key => {
-                key.addEventListener("click", function () {
-                    const keyNumber = key.getAttribute("data-key");
-                    passwordInput.value += keyNumber;
+            // Simulación de datos para autocompletado (puedes cargar datos reales desde una fuente)
+            const lugares = ['Perú', 'Estados Unidos', 'España', 'Argentina', 'Colombia', 'Chile', 'México', 'Brasil'];
+            const filteredLugares = lugares.filter((lugar) => lugar.toLowerCase().includes(inputValue.toLowerCase()));
+            filteredLugares.slice(0, 5).forEach((lugar) => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.textContent = lugar;
+                item.addEventListener('click', () => {
+                    lugarInput.value = lugar;
+                    autocomplete.innerHTML = '';
                 });
+                autocomplete.appendChild(item);
             });
-        
-            passwordInput.addEventListener("keyup", function (event) {
-                if (event.key === "Enter") {
-                    verificarContraseña();
-                }
-            });
-            function verificarContraseña() {
-                const password = passwordInput.value;
-                if (passwords[userId] && password === passwords[userId]) {
+        });
+    }
+}
 
-                    modal.style.display = "none";
-                    mostrarInformacionUsuario(parseInt(userId));
-                } else {
+function calcularGanancia() {
+    // Obtiene los datos de la tabla
+    const rows = document.querySelectorAll("#tabla-body tr");
+    const data = [];
 
-                    alert("Contraseña incorrecta. Por favor, inténtelo de nuevo.");
-                }
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll("td input");
+        const rowData = Array.from(cells).map((cell) => cell.value);
+        data.push(rowData);
+    });
+
+    // Calcula las ganancias
+    const ganancias = data.map((rowData) => {
+        const precio = parseFloat(rowData[1]);
+        const cantidad = parseInt(rowData[5]);
+        const igv = parseFloat(rowData[6]);
+        const precioTotal = parseFloat(rowData[7]);
+
+        const ganancia = (precio * cantidad) + igv - precioTotal;
+        return ganancia;
+    });
+
+    // Actualiza los gráficos
+    actualizarGraficos(data, ganancias);
+}
+
+function actualizarGraficos(data, ganancias) {
+    // Muestra los gráficos
+    document.getElementById("chart-container").style.display = "flex";
+
+    // Configura el gráfico de barras
+    const options1 = {
+        chart: {
+            type: 'bar',
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    chart1.render();
+
+    // Configura el gráfico de dona
+    const options2 = {
+        chart: {
+            type: 'donut',
+        },
+        series: ganancias,
+        labels: data.map((rowData) => rowData[0]), // Nombres de los productos
+    };
+    const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+    chart2.render();
+
+
+        // Configura el gráfico de línea
+        const options3 = {
+            chart: {
+                type: 'line',
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+        chart3.render();
+
+        // Configura el gráfico de área
+        const options4 = {
+            chart: {
+                type: 'area',
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+        chart4.render();
+
+        // Configura el quinto gráfico (puedes personalizar según tus necesidades)
+        const options5 = {
+            chart: {
+                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart5 = new ApexCharts(document.querySelector("#chart5"), options5);
+        chart5.render();
+
+        // Configura el sexto gráfico (puedes personalizar según tus necesidades)
+        const options6 = {
+            chart: {
+                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart6 = new ApexCharts(document.querySelector("#chart6"), options6);
+        chart6.render();
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para obtener los parámetros de la URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[[\]]/g, "\\$&");
+            const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return "";
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Obtener el parámetro "userId" de la URL
+        const userId = getParameterByName("userId");
+
+        // Añadir el código para mostrar la imagen y el nombre en la página
+        if (userId) {
+            // Aquí deberías agregar el código para mostrar la imagen y el nombre del usuario
+            // Puedes utilizar un objeto o una estructura de datos para mapear userId con la información del usuario
+            // Por ejemplo:
+            const userInformation = {
+                1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
+                2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
+                3: { name: "Sergio Leyva", role: "Encargado del Área de Trabajo", image: "usuario1.jpg" },
+                4: { name: "Deily Matos", role: "Encargado de Comercialización", image: "usuario2.jpg" },
+                5: { name: "Frank Aguilar", role: "Encargado de Administración y Finanzas", image: "usuario3.jpg" },
+                6: { name: "Vanessa Genovés", role: "Obrero y Ayudante", image: "usuario4.jpg" },
+                7: { name: "Henry Ascencio", role: "Publicista", image: "usuario5.jpg" },
+                // Agregar más usuarios aquí
+            };
+
+            const user = userInformation[userId];
+            if (user) {
+                // Actualizar la imagen y el nombre en la página
+                const profileImage = document.getElementById("profile-image");
+                const profileName = document.getElementById("profile-name");
+
+                profileImage.src = user.image;
+                profileName.textContent = user.name;
+                // Cambiar el color del nombre del ejecutivo a blanco
+                profileName.style.color = "white";
+            }
+        }
+    });
+    function verificarContrasena() {
+            const contrasenaIngresada = parseInt(document.getElementById("password").value);
+            let contrasenaCorrecta;
+
+            // Asignar contraseñas específicas para diferentes ejecutivos
+            switch (contrasenaIngresada) {
+                case 1:
+                    contrasenaCorrecta = 12345; // Contraseña para Ejecutivo 1
+                    break;
+                case 2:
+                    contrasenaCorrecta = 54321; // Contraseña para Ejecutivo 2
+                    break;
+                case 3:
+                    contrasenaCorrecta = 98765; // Contraseña para Ejecutivo 3
+                    break;
+                case 4:
+                    contrasenaCorrecta = 11111; // Contraseña para Ejecutivo 4
+                    break;
+                case 5:
+                    contrasenaCorrecta = 99999; // Contraseña para Ejecutivo 5
+                    break;
+                default:
+                    contrasenaCorrecta = null;
             }
 
-            mostrarModalContrasena();
+            if (contrasenaCorrecta !== null && contrasenaIngresada === contrasenaCorrecta) {
+                // Contraseña correcta, mostrar el contenido principal
+                document.getElementById("contenido").style.display = "block";
+                // Puedes redirigir a la página de estadísticas aquí si es necesario
+            } else {
+                // Contraseña incorrecta, mostrar un mensaje de error
+                alert("Contraseña incorrecta. Intente de nuevo.");
+            }
         }
-    </script>
+        </script>
+    </section>
 </body>
 </html>
