@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trabajadores</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <style>
@@ -68,10 +67,11 @@
         color: white;
         width: 80%;
         margin: 20px;
+        overflow-x: auto; /* Barra de desplazamiento horizontal */
     }
 
     table {
-        width: 100%;
+        max-width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
     }
@@ -96,7 +96,7 @@
     }
 
     #chart-container {
-        display: flex;
+        display: none; /* Ocultar los gráficos al inicio */
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-around;
@@ -105,11 +105,32 @@
         padding: 20px;
         border: 2px solid rgba(255, 255, 255, 0.663);
         border-radius: 20px;
+        margin-top: 20px;
     }
 
     .chart {
         width: 45%;
         margin-bottom: 20px;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    select, input {
+        padding: 10px;
+        border: 1px solid white;
+        border-radius: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        width: calc(100% - 16px);
+        margin-right: 16px;
     }
 </style>
 <body>
@@ -118,37 +139,30 @@
         <div class="user-info">
             <img src="ruta-de-la-imagen-del-usuario.jpg" alt="Imagen de Usuario" class="user-image">
             <div>
-                <p class="user-name">Nombre del Usuario</p>
+                <p class "user-name">Nombre del Usuario</p>
             </div>
         </div>
         <div class="table-container">
             <h1>Tabla de Ventas</h1>
+            <div class="input-container">
+                <button id="start-button" onclick="empezarAgregar()">Empezar</button>
+                <button id="stop-button" onclick="detenerAgregar()" style="display: none;">Calcular</button>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th>Producto</th>
                         <th>Precio (sin IGV)</th>
+                        <th>Lugar</th>
+                        <th>Fecha de Entrega</th>
+                        <th>Fecha de Salida</th>
                         <th>Cantidad</th>
                         <th>IGV</th>
                         <th>Precio Total</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Producto 1</td>
-                        <td>100</td>
-                        <td>2</td>
-                        <td>18</td>
-                        <td>236</td>
-                    </tr>
-                    <tr>
-                        <td>Producto 2</td>
-                        <td>75</td>
-                        <td>3</td>
-                        <td>13.5</td>
-                        <td>256.5</td>
-                    </tr>
-                    <!-- Puedes agregar más filas para otros productos -->
+                <tbody id="tabla-body">
+                    <!-- Filas de la tabla se agregarán dinámicamente -->
                 </tbody>
             </table>
             <button onclick="calcularGanancia()">Calcular Ganancia</button>
@@ -158,65 +172,204 @@
             <div class="chart" id="chart2"></div>
             <div class="chart" id="chart3"></div>
             <div class="chart" id="chart4"></div>
+            <div class="chart" id="chart5"></div>
+            <div class="chart" id="chart6"></div>
         </div>
-    </section>
-    <script>
-       function calcularGanancia() {
-        const options1 = {
-            chart: {
-                type: 'bar',
-            },
-            series: [{
-                name: 'Ganancia',
-                data: [236, 256.5],
-            }],
-            xaxis: {
-                categories: ['Producto 1', 'Producto 2'],
-            },
-        };
-        const chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
-        chart1.render();
+        
+        <script>
+             let addingData = false;
 
-        const options2 = {
-            chart: {
-                type: 'donut',
-            },
-            series: [236, 256.5],
-            labels: ['Producto 1', 'Producto 2'],
-        };
-        const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-        chart2.render();
+function empezarAgregar() {
+    addingData = true;
+    document.getElementById("start-button").style.display = "none";
+    document.getElementById("stop-button").style.display = "block";
+    agregarFila();
+}
 
+function detenerAgregar() {
+    addingData = false;
+    document.getElementById("stop-button").style.display = "none";
+    document.getElementById("start-button").style.display = "block";
+}
+
+function agregarFila() {
+    if (addingData) {
+        const table = document.getElementById("tabla-body");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td><input type="text" placeholder="Producto"></td>
+            <td><input type="number" placeholder="Precio"></td>
+            <td class="autocomplete-container">
+                <input type="text" placeholder="Lugar">
+                <div class="autocomplete"></div>
+            </td>
+            <td><input type="date"></td>
+            <td><input type="date"></td>
+            <td><input type="number" placeholder="Cantidad"></td>
+            <td><input type="number" placeholder="IGV"></td>
+            <td><input type="number" placeholder="Precio Total"></td>
+        `;
+        table.appendChild(newRow);
+
+        // Manejar la pulsación de Enter para agregar una nueva fila
+        const inputs = newRow.querySelectorAll("input");
+        inputs.forEach((input, index) => {
+            input.addEventListener("keyup", (e) => {
+                if (e.key === "Enter" && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                } else if (e.key === "Enter" && index === inputs.length - 1) {
+                    agregarFila();
+                }
+            });
+        });
+
+        // Configura la función de autocompletado
+        const lugarInput = newRow.querySelector('input[placeholder="Lugar"]');
+        const autocomplete = newRow.querySelector('.autocomplete');
+        lugarInput.addEventListener('input', (e) => {
+            const inputValue = e.target.value;
+            autocomplete.innerHTML = '';
+
+            // Simulación de datos para autocompletado (puedes cargar datos reales desde una fuente)
+            const lugares = ['Perú', 'Estados Unidos', 'España', 'Argentina', 'Colombia', 'Chile', 'México', 'Brasil'];
+            const filteredLugares = lugares.filter((lugar) => lugar.toLowerCase().includes(inputValue.toLowerCase()));
+            filteredLugares.slice(0, 5).forEach((lugar) => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.textContent = lugar;
+                item.addEventListener('click', () => {
+                    lugarInput.value = lugar;
+                    autocomplete.innerHTML = '';
+                });
+                autocomplete.appendChild(item);
+            });
+        });
+    }
+}
+
+function calcularGanancia() {
+    // Obtiene los datos de la tabla
+    const rows = document.querySelectorAll("#tabla-body tr");
+    const data = [];
+
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll("td input");
+        const rowData = Array.from(cells).map((cell) => cell.value);
+        data.push(rowData);
+    });
+
+    // Calcula las ganancias
+    const ganancias = data.map((rowData) => {
+        const precio = parseFloat(rowData[1]);
+        const cantidad = parseInt(rowData[5]);
+        const igv = parseFloat(rowData[6]);
+        const precioTotal = parseFloat(rowData[7]);
+
+        const ganancia = (precio * cantidad) + igv - precioTotal;
+        return ganancia;
+    });
+
+    // Actualiza los gráficos
+    actualizarGraficos(data, ganancias);
+}
+
+function actualizarGraficos(data, ganancias) {
+    // Muestra los gráficos
+    document.getElementById("chart-container").style.display = "flex";
+
+    // Configura el gráfico de barras
+    const options1 = {
+        chart: {
+            type: 'bar',
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    chart1.render();
+
+    // Configura el gráfico de dona
+    const options2 = {
+        chart: {
+            type: 'donut',
+        },
+        series: ganancias,
+        labels: data.map((rowData) => rowData[0]), // Nombres de los productos
+    };
+    const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+    chart2.render();
+
+
+        // Configura el gráfico de línea
         const options3 = {
             chart: {
                 type: 'line',
             },
             series: [{
                 name: 'Ganancia',
-                data: [236, 256.5],
+                data: ganancias,
             }],
             xaxis: {
-                categories: ['Producto 1', 'Producto 2'],
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
             },
         };
         const chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
         chart3.render();
 
+        // Configura el gráfico de área
         const options4 = {
             chart: {
                 type: 'area',
             },
             series: [{
                 name: 'Ganancia',
-                data: [236, 256.5],
+                data: ganancias,
             }],
             xaxis: {
-                categories: ['Producto 1', 'Producto 2'],
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
             },
         };
         const chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
         chart4.render();
+
+        // Configura el quinto gráfico (puedes personalizar según tus necesidades)
+        const options5 = {
+            chart: {
+                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart5 = new ApexCharts(document.querySelector("#chart5"), options5);
+        chart5.render();
+
+        // Configura el sexto gráfico (puedes personalizar según tus necesidades)
+        const options6 = {
+            chart: {
+                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+            },
+            series: [{
+                name: 'Ganancia',
+                data: ganancias,
+            }],
+            xaxis: {
+                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+            },
+        };
+        const chart6 = new ApexCharts(document.querySelector("#chart6"), options6);
+        chart6.render();
     }
-    </script>
+        </script>
+    </section>
 </body>
 </html>
