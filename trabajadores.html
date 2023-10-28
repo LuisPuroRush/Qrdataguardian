@@ -132,15 +132,28 @@
         width: calc(100% - 16px);
         margin-right: 16px;
     }
+    #profile-image {
+    width: 100px; /* Ajusta el ancho según tus preferencias */
+    height: 100px; /* Ajusta la altura según tus preferencias */
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    /* Otros estilos según tus preferencias */
+}
+
 </style>
 <body>
     <section class="container">
         <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
-        <div class="user-info">
-            <img src="ruta-de-la-imagen-del-usuario.jpg" alt="Imagen de Usuario" class="user-image">
-            <div>
-                <p class "user-name">Nombre del Usuario</p>
-            </div>
+        <div class="user-profile-container">
+            <img id="profile-image" src="" alt="Imagen de perfil">
+            <p id="profile-name">Nombre de usuario</p>
+        </div>        
         </div>
         <div class="table-container">
             <h1>Tabla de Ventas</h1>
@@ -369,6 +382,34 @@ function actualizarGraficos(data, ganancias) {
         const chart6 = new ApexCharts(document.querySelector("#chart6"), options6);
         chart6.render();
     }
+    document.addEventListener("DOMContentLoaded", function () {
+    const cookies = document.cookie;
+    const usuarioCookie = cookies.split(';').find(cookie => cookie.trim().startsWith('usuario='));
+
+    if (usuarioCookie) {
+        const nombreUsuario = usuarioCookie.split('=')[1];
+
+        // Define un objeto con la correspondencia entre usuarios y rutas de imágenes
+        const imageMapping = {
+            "Giovani": "giovani.jpg",
+            "Luis": "luis.jpg",
+            "Sara": "sara.jpg",
+            // Asegúrate de que los nombres coincidan exactamente y las rutas sean correctas
+            // Agrega más usuarios y rutas de imágenes aquí
+        };
+
+        // Mostrar el nombre de usuario
+        document.getElementById("profile-name").innerText = nombreUsuario;
+
+        // Verificar si hay una imagen correspondiente y mostrarla
+        if (imageMapping[nombreUsuario]) {
+            const imagePath = imageMapping[nombreUsuario];
+            document.getElementById("profile-image").src = imagePath;
+        }
+    }
+});
+
+
         </script>
     </section>
 </body>
