@@ -145,6 +145,25 @@
     margin: 20px;
     /* Otros estilos según tus preferencias */
 }
+/* Estilos para la página */
+.user-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+    /* Otros estilos según tus preferencias */
+}
+
+.user-profile-container .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-container .active-users {
+    display: flex;
+    align-items: center;
+    color: green;
+}
 
 </style>
 <body>
@@ -153,8 +172,11 @@
         <div class="user-profile-container">
             <img id="profile-image" src="" alt="Imagen de perfil">
             <p id="profile-name">Nombre de usuario</p>
+            <div class="active-users">
+                <i class="fas fa-user" style="color: green;"></i>
+                <p id="active-users-text" style="color: green;">Hay <span id="active-users-count">9</span> trabajadores activos</p>
+            </div>
         </div>        
-        </div>
         <div class="table-container">
             <h1>Tabla de Ventas</h1>
             <div class="input-container">
@@ -460,6 +482,63 @@ function actualizarGraficos(data, ganancias) {
                 alert("Contraseña incorrecta. Intente de nuevo.");
             }
         }
+        document.addEventListener("DOMContentLoaded", function () {
+    // Función para obtener los parámetros de la URL
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[[\]]/g, "\\$&");
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    // Obtener el parámetro "userId" de la URL
+    const userId = getParameterByName("userId");
+
+    // Añadir el código para mostrar la imagen y el nombre en la página
+    if (userId) {
+        // Aquí deberías agregar el código para mostrar la imagen y el nombre del usuario
+        // Puedes utilizar un objeto o una estructura de datos para mapear userId con la información del usuario
+        // Por ejemplo:
+        const userInformation = {
+            1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
+            2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
+            3: { name: "Ejecutivo 3", role: "Cargo 3", image: "usuario3.jpg" },
+            4: { name: "Ejecutivo 4", role: "Cargo 4", image: "usuario4.jpg" },
+            5: { name: "Ejecutivo 5", role: "Cargo 5", image: "usuario5.jpg" },
+        };
+
+        const user = userInformation[userId];
+        if (user) {
+            // Actualizar la imagen y el nombre en la página
+            const profileImage = document.getElementById("profile-image");
+            const profileName = document.getElementById("profile-name");
+
+            profileImage.src = user.image;
+            profileName.textContent = user.name;
+            // Cambiar el color del nombre del ejecutivo a blanco
+            profileName.style.color = "white";
+        }
+    }
+
+    // Reducir el número de usuarios de 9 a 2 y agregar el ícono de usuario
+    const activeUsersCount = document.getElementById("active-users-count");
+    const activeUsersText = document.getElementById("active-users-text");
+
+    const decreaseUsers = () => {
+        let count = parseInt(activeUsersCount.textContent);
+        if (count > 2) {
+            count--;
+            activeUsersCount.textContent = count;
+            setTimeout(decreaseUsers, 1000); // Disminuye el número cada segundo
+        }
+    };
+
+    decreaseUsers();
+});
+
         </script>
     </section>
 </body>
