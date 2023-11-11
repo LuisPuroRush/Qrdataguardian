@@ -503,12 +503,16 @@ function actualizarGraficos(data, ganancias) {
         // Puedes utilizar un objeto o una estructura de datos para mapear userId con la información del usuario
         // Por ejemplo:
         const userInformation = {
-            1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
-            2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
-            3: { name: "Ejecutivo 3", role: "Cargo 3", image: "usuario3.jpg" },
-            4: { name: "Ejecutivo 4", role: "Cargo 4", image: "usuario4.jpg" },
-            5: { name: "Ejecutivo 5", role: "Cargo 5", image: "usuario5.jpg" },
-        };
+    1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
+    2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
+    3: { name: "Sergio Leyva", role: "Encargado del Área de Trabajo", image: "usuario1.jpg" },
+    4: { name: "Deily Matos", role: "Encargado de Comercialización", image: "usuario2.jpg" },
+    5: { name: "Frank Aguilar", role: "Encargado de Administración y Finanzas", image: "usuario3.jpg" },
+    6: { name: "Vanessa Genovés", role: "Obrero y Ayudante", image: "usuario4.jpg" },
+    7: { name: "Henry Ascencio", role: "Publicista", image: "usuario5.jpg" },
+    // Agregar más usuarios aquí
+};
+
 
         const user = userInformation[userId];
         if (user) {
