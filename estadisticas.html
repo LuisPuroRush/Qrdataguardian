@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>estadisticas</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.6.0/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+
 </head>
 <style>
     /* Estilos para la página */
@@ -166,6 +170,16 @@
 }
 
 </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Título</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Agrega tus enlaces a CSS, si es necesario -->
+</head>
+
 <body>
     <section class="container">
         <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
@@ -176,8 +190,8 @@
                 <i class="fas fa-user" style="color: green;"></i>
                 <p id="active-users-text" style="color: green;">Hay <span id="active-users-count">9</span> trabajadores activos</p>
             </div>
-        </div>        
-        <div class="table-container">
+        </div>
+        <div class="table-container" id="table-container">
             <h1>Tabla de Ventas</h1>
             <div class="input-container">
                 <button id="start-button" onclick="empezarAgregar()">Empezar</button>
@@ -202,6 +216,52 @@
             </table>
             <button onclick="calcularGanancia()">Calcular Ganancia</button>
         </div>
+        <div id="paint-container" class="paint-container">
+            <!-- Herramientas y botones de Paint -->
+            <div class="tool-buttons">
+                <button id="pencil-button" class="tool-button" title="Lápiz">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button id="shapes-mode-button" class="tool-button" title="Cambiar a Modo Formas">
+                    <i class="fas fa-shapes"></i>
+                </button>
+                <button id="add-rectangle-button" class="tool-button" title="Agregar Rectángulo">
+                    <i class="fas fa-square"></i>
+                </button>
+                <button id="add-circle-button" class="tool-button" title="Agregar Círculo">
+                    <i class="fas fa-circle"></i>
+                </button>
+                <button id="add-text-button" class="tool-button" title="Agregar Texto">
+                    <i class="fas fa-font"></i>
+                </button>
+                <button id="delete-button" class="tool-button" title="Eliminar Seleccionado">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button id="change-color-button" class="tool-button" title="Cambiar Color Seleccionado">
+                    <i class="fas fa-paint-brush"></i>
+                </button>
+                <button id="download-button" class="tool-button" title="Descargar Dibujo" onclick="descargarDatos()">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button id="add-image-button" class="tool-button" title="Agregar Imagen">
+                    <i class="fas fa-image"></i>
+                </button>
+            </div>
+
+            <!-- Paleta de colores -->
+            <div id="color-palette" class="tool">
+                <!-- Botones de colores -->
+                <!-- ... (tus colores actuales) -->
+                <button id="add-color-button" class="add-color-button" title="Agregar Color Personalizado">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de dibujo -->
+        <div id="editor-container" class="editor-container">
+            <canvas id="drawing-canvas"></canvas>
+        </div>
         <div id="chart-container">
             <div class="chart" id="chart1"></div>
             <div class="chart" id="chart2"></div>
@@ -210,9 +270,10 @@
             <div class="chart" id="chart5"></div>
             <div class="chart" id="chart6"></div>
         </div>
-        
+    </section>
+</body>
         <script>
-             let addingData = false;
+          let addingData = false;
 
 function empezarAgregar() {
     addingData = true;
@@ -339,150 +400,72 @@ function actualizarGraficos(data, ganancias) {
     const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
     chart2.render();
 
+    // Configura el gráfico de línea
+    const options3 = {
+        chart: {
+            type: 'line',
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+    chart3.render();
 
-        // Configura el gráfico de línea
-        const options3 = {
-            chart: {
-                type: 'line',
-            },
-            series: [{
-                name: 'Ganancia',
-                data: ganancias,
-            }],
-            xaxis: {
-                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
-            },
-        };
-        const chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
-        chart3.render();
+    // Configura el gráfico de área
+    const options4 = {
+        chart: {
+            type: 'area',
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+    chart4.render();
 
-        // Configura el gráfico de área
-        const options4 = {
-            chart: {
-                type: 'area',
-            },
-            series: [{
-                name: 'Ganancia',
-                data: ganancias,
-            }],
-            xaxis: {
-                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
-            },
-        };
-        const chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
-        chart4.render();
+    // Configura el quinto gráfico (puedes personalizar según tus necesidades)
+    const options5 = {
+        chart: {
+            type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart5 = new ApexCharts(document.querySelector("#chart5"), options5);
+    chart5.render();
 
-        // Configura el quinto gráfico (puedes personalizar según tus necesidades)
-        const options5 = {
-            chart: {
-                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
-            },
-            series: [{
-                name: 'Ganancia',
-                data: ganancias,
-            }],
-            xaxis: {
-                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
-            },
-        };
-        const chart5 = new ApexCharts(document.querySelector("#chart5"), options5);
-        chart5.render();
+    // Configura el sexto gráfico (puedes personalizar según tus necesidades)
+    const options6 = {
+        chart: {
+            type: 'bar', // Puedes cambiar el tipo de gráfico aquí
+        },
+        series: [{
+            name: 'Ganancia',
+            data: ganancias,
+        }],
+        xaxis: {
+            categories: data.map((rowData) => rowData[0]), // Nombres de los productos
+        },
+    };
+    const chart6 = new ApexCharts(document.querySelector("#chart6"), options6);
+    chart6.render();
+}
 
-        // Configura el sexto gráfico (puedes personalizar según tus necesidades)
-        const options6 = {
-            chart: {
-                type: 'bar', // Puedes cambiar el tipo de gráfico aquí
-            },
-            series: [{
-                name: 'Ganancia',
-                data: ganancias,
-            }],
-            xaxis: {
-                categories: data.map((rowData) => rowData[0]), // Nombres de los productos
-            },
-        };
-        const chart6 = new ApexCharts(document.querySelector("#chart6"), options6);
-        chart6.render();
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        // Función para obtener los parámetros de la URL
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[[\]]/g, "\\$&");
-            const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return "";
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-
-        // Obtener el parámetro "userId" de la URL
-        const userId = getParameterByName("userId");
-
-        // Añadir el código para mostrar la imagen y el nombre en la página
-        if (userId) {
-            // Aquí deberías agregar el código para mostrar la imagen y el nombre del usuario
-            // Puedes utilizar un objeto o una estructura de datos para mapear userId con la información del usuario
-            // Por ejemplo:
-            const userInformation = {
-                1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
-                2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
-                3: { name: "Sergio Leyva", role: "Encargado del Área de Trabajo", image: "usuario1.jpg" },
-                4: { name: "Deily Matos", role: "Encargado de Comercialización", image: "usuario2.jpg" },
-                5: { name: "Frank Aguilar", role: "Encargado de Administración y Finanzas", image: "usuario3.jpg" },
-                6: { name: "Vanessa Genovés", role: "Obrero y Ayudante", image: "usuario4.jpg" },
-                7: { name: "Henry Ascencio", role: "Publicista", image: "usuario5.jpg" },
-                // Agregar más usuarios aquí
-            };
-
-            const user = userInformation[userId];
-            if (user) {
-                // Actualizar la imagen y el nombre en la página
-                const profileImage = document.getElementById("profile-image");
-                const profileName = document.getElementById("profile-name");
-
-                profileImage.src = user.image;
-                profileName.textContent = user.name;
-                // Cambiar el color del nombre del ejecutivo a blanco
-                profileName.style.color = "white";
-            }
-        }
-    });
-    function verificarContrasena() {
-            const contrasenaIngresada = parseInt(document.getElementById("password").value);
-            let contrasenaCorrecta;
-
-            // Asignar contraseñas específicas para diferentes ejecutivos
-            switch (contrasenaIngresada) {
-                case 1:
-                    contrasenaCorrecta = 12345; // Contraseña para Ejecutivo 1
-                    break;
-                case 2:
-                    contrasenaCorrecta = 54321; // Contraseña para Ejecutivo 2
-                    break;
-                case 3:
-                    contrasenaCorrecta = 98765; // Contraseña para Ejecutivo 3
-                    break;
-                case 4:
-                    contrasenaCorrecta = 11111; // Contraseña para Ejecutivo 4
-                    break;
-                case 5:
-                    contrasenaCorrecta = 99999; // Contraseña para Ejecutivo 5
-                    break;
-                default:
-                    contrasenaCorrecta = null;
-            }
-
-            if (contrasenaCorrecta !== null && contrasenaIngresada === contrasenaCorrecta) {
-                // Contraseña correcta, mostrar el contenido principal
-                document.getElementById("contenido").style.display = "block";
-                // Puedes redirigir a la página de estadísticas aquí si es necesario
-            } else {
-                // Contraseña incorrecta, mostrar un mensaje de error
-                alert("Contraseña incorrecta. Intente de nuevo.");
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     // Función para obtener los parámetros de la URL
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
@@ -503,16 +486,15 @@ function actualizarGraficos(data, ganancias) {
         // Puedes utilizar un objeto o una estructura de datos para mapear userId con la información del usuario
         // Por ejemplo:
         const userInformation = {
-    1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
-    2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
-    3: { name: "Sergio Leyva", role: "Encargado del Área de Trabajo", image: "usuario1.jpg" },
-    4: { name: "Deily Matos", role: "Encargado de Comercialización", image: "usuario2.jpg" },
-    5: { name: "Frank Aguilar", role: "Encargado de Administración y Finanzas", image: "usuario3.jpg" },
-    6: { name: "Vanessa Genovés", role: "Obrero y Ayudante", image: "usuario4.jpg" },
-    7: { name: "Henry Ascencio", role: "Publicista", image: "usuario5.jpg" },
-    // Agregar más usuarios aquí
-};
-
+            1: { name: "Leyva Corro", role: "Gerente General", image: "Profesora.jpg" },
+            2: { name: "Gianfranco Bazán", role: "Diseñador", image: "giovani.jpg" },
+            3: { name: "Sergio Leyva", role: "Encargado del Área de Trabajo", image: "usuario1.jpg" },
+            4: { name: "Deily Matos", role: "Encargado de Comercialización", image: "usuario2.jpg" },
+            5: { name: "Frank Aguilar", role: "Encargado de Administración y Finanzas", image: "usuario3.jpg" },
+            6: { name: "Vanessa Genovés", role: "Obrero y Ayudante", image: "usuario4.jpg" },
+            7: { name: "Henry Ascencio", role: "Publicista", image: "usuario5.jpg" },
+            // Agregar más usuarios aquí
+        };
 
         const user = userInformation[userId];
         if (user) {
@@ -524,24 +506,169 @@ function actualizarGraficos(data, ganancias) {
             profileName.textContent = user.name;
             // Cambiar el color del nombre del ejecutivo a blanco
             profileName.style.color = "white";
+
+            if (userId === "2") {
+                // Si el usuario es Gianfranco Bazán, mostrar el área de dibujo y ocultar la tabla
+                mostrarAreaDeDibujo();
+            } else {
+                // Para otros usuarios, mostrar la tabla y ocultar el área de dibujo
+                mostrarTabla();
+            }
         }
     }
-
-    // Reducir el número de usuarios de 9 a 2 y agregar el ícono de usuario
-    const activeUsersCount = document.getElementById("active-users-count");
-    const activeUsersText = document.getElementById("active-users-text");
-
-    const decreaseUsers = () => {
-        let count = parseInt(activeUsersCount.textContent);
-        if (count > 2) {
-            count--;
-            activeUsersCount.textContent = count;
-            setTimeout(decreaseUsers, 1000); // Disminuye el número cada segundo
-        }
-    };
-
-    decreaseUsers();
 });
+
+function mostrarTabla() {
+    document.getElementById("table-container").style.display = "flex";
+    document.getElementById("editor-container").style.display = "none";
+    document.getElementById("paint-container").style.display = "none";
+}
+
+function mostrarAreaDeDibujo() {
+    document.getElementById("table-container").style.display = "none";
+    document.getElementById("editor-container").style.display = "flex";
+    document.getElementById("paint-container").style.display = "flex";
+
+    // Inicializar el lienzo de dibujo con Fabric.js
+    const canvas = new fabric.Canvas('drawing-canvas', {
+        backgroundColor: 'white',
+        isDrawingMode: true,
+        width: 1200,
+        height: 800,
+    });
+
+    // Paleta de colores
+    const colorPalette = document.getElementById('color-palette');
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'black', 'white', 'orange', 'pink', 'brown', 'cyan', 'lime', 'gold', 'indigo', 'silver'];
+
+    colors.forEach((color) => {
+        const colorButton = document.createElement('button');
+        colorButton.style.backgroundColor = color;
+        colorButton.addEventListener('click', () => {
+            if (canvas.getActiveObject()) {
+                canvas.getActiveObject().set('fill', color);
+                canvas.renderAll();
+            } else {
+                canvas.freeDrawingBrush.color = color;
+            }
+        });
+        colorPalette.appendChild(colorButton);
+    });
+
+    // Botones de formas y texto
+    const shapesModeButton = document.getElementById('shapes-mode-button');
+    const addRectangleButton = document.getElementById('add-rectangle-button');
+    const addCircleButton = document.getElementById('add-circle-button');
+    const addTextButton = document.getElementById('add-text-button');
+    const deleteButton = document.getElementById('delete-button');
+    const changeColorButton = document.getElementById('change-color-button');
+    const addImageButton = document.getElementById('add-image-button');
+
+    // Funciones de botones
+    shapesModeButton.addEventListener('click', () => {
+        canvas.isDrawingMode = !canvas.isDrawingMode;
+        if (canvas.isDrawingMode) {
+            canvas.freeDrawingBrush.color = colors[0]; // Establecer el color de lápiz predeterminado
+        }
+    });
+
+    addRectangleButton.addEventListener('click', () => {
+        const rect = new fabric.Rect({
+            width: 100,
+            height: 50,
+            fill: canvas.freeDrawingBrush.color, // Rellenar con el color actual del lápiz
+            left: 10,
+            top: 10,
+        });
+        canvas.add(rect);
+    });
+
+    addCircleButton.addEventListener('click', () => {
+        const circle = new fabric.Circle({
+            radius: 50,
+            fill: canvas.freeDrawingBrush.color, // Rellenar con el color actual del lápiz
+            left: 100,
+            top: 10,
+        });
+        canvas.add(circle);
+    });
+
+    addTextButton.addEventListener('click', () => {
+        const text = new fabric.IText('Tu texto aquí', {
+            fill: canvas.freeDrawingBrush.color,
+            left: 10,
+            top: 10,
+        });
+        canvas.add(text);
+    });
+
+    deleteButton.addEventListener('click', () => {
+        const activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.remove(activeObject);
+        }
+    });
+
+    changeColorButton.addEventListener('click', () => {
+        const activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            activeObject.set('fill', canvas.freeDrawingBrush.color);
+            canvas.renderAll();
+        }
+    });
+
+    addImageButton.addEventListener('click', agregarImagen);
+}
+
+function agregarImagen() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.addEventListener('change', manejarCambioImagen);
+    input.click();
+}
+
+function manejarCambioImagen(event) {
+    const archivo = event.target.files[0];
+    if (archivo) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imgObj = new Image();
+            imgObj.src = e.target.result;
+            imgObj.onload = function () {
+                const img = new fabric.Image(imgObj);
+                canvas.add(img);
+            };
+        };
+        reader.readAsDataURL(archivo);
+    }
+}
+function agregarColorPersonalizado() {
+    const nuevoColor = prompt('Ingrese el código de color (hexadecimal):', '#000000');
+    if (nuevoColor !== null) {
+        colorPicker.value = nuevoColor;
+        cambiarColorLapiz();
+    }
+}
+function ocultarElementosSegunUsuario(userId) {
+    const paintContainer = document.getElementById("paint-container");
+    const editorContainer = document.getElementById("editor-container");
+
+    if (userId !== "2") { // No es Gianfranco Bazán
+        paintContainer.style.display = "none";
+        editorContainer.style.display = "none";
+    }
+}
+function descargarDatos() {
+    const canvas = document.getElementById('drawing-canvas');
+    const dataURL = canvas.toDataURL({ format: 'png' });
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'lienzo.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
         </script>
     </section>
