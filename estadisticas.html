@@ -167,7 +167,55 @@
     align-items: center;
     color: green;
 }
+#calculator-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
 
+    #calculator-container {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        z-index: 2;
+    }
+
+    #close-calculator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .calculator-button {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        font-size: 1.5em;
+        cursor: pointer;
+        display: inline-block; /* Mantiene los botones en línea */
+        text-align: center; /* Centra el texto dentro del botón */
+    }
+
+    #calculator-display {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        font-size: 1.5em;
+        text-align: right;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -214,6 +262,32 @@
                 </tbody>
             </table>
             <button onclick="calcularGanancia()">Calcular Ganancia</button>
+        </div>
+        <button id="calculator-button" onclick="toggleCalculator()">
+            <i class="fas fa-calculator"></i>
+        </button>
+    
+        <!-- Contenedor de la calculadora -->
+        <div id="calculator-container">
+            <div id="calculator-display">0</div>
+            <div class="calculator-button" onclick="addToDisplay('7')">7</div>
+            <div class="calculator-button" onclick="addToDisplay('8')">8</div>
+            <div class="calculator-button" onclick="addToDisplay('9')">9</div>
+            <div class="calculator-button" onclick="addToDisplay('/')">/</div>
+            <div class="calculator-button" onclick="addToDisplay('4')">4</div>
+            <div class="calculator-button" onclick="addToDisplay('5')">5</div>
+            <div class="calculator-button" onclick="addToDisplay('6')">6</div>
+            <div class="calculator-button" onclick="addToDisplay('*')">*</div>
+            <div class="calculator-button" onclick="addToDisplay('1')">1</div>
+            <div class="calculator-button" onclick="addToDisplay('2')">2</div>
+            <div class="calculator-button" onclick="addToDisplay('3')">3</div>
+            <div class="calculator-button" onclick="addToDisplay('-')">-</div>
+            <div class="calculator-button" onclick="addToDisplay('0')">0</div>
+            <div class="calculator-button" onclick="addToDisplay('.')">.</div>
+            <div class="calculator-button" onclick="calculateResult()">=</div>
+            <div class="calculator-button" onclick="addToDisplay('+')">+</div>
+            <!-- Botón para cerrar la calculadora -->
+            <div id="close-calculator" onclick="toggleCalculator()">X</div>
         </div>
         <div id="paint-container" class="paint-container">
             <!-- Herramientas y botones de Paint -->
@@ -686,6 +760,31 @@ function descargarDatos() {
     deleteButton.title = 'Eliminar Seleccionado';
     changeColorButton.title = 'Cambiar Color Seleccionado';
     addImageButton.title = 'Agregar Imagen';
+    let currentDisplay = '';
+
+        function toggleCalculator() {
+            const calculatorContainer = document.getElementById('calculator-container');
+            calculatorContainer.style.display = calculatorContainer.style.display === 'none' ? 'block' : 'none';
+            // Limpiar el display al abrir la calculadora
+            document.getElementById('calculator-display').textContent = '0';
+            currentDisplay = '';
+        }
+
+        function addToDisplay(value) {
+            currentDisplay += value;
+            document.getElementById('calculator-display').textContent = currentDisplay;
+        }
+
+        function calculateResult() {
+            try {
+                const result = eval(currentDisplay);
+                document.getElementById('calculator-display').textContent = result;
+                currentDisplay = result.toString();
+            } catch (error) {
+                document.getElementById('calculator-display').textContent = 'Error';
+                currentDisplay = '';
+            }
+        }
         </script>
     </section>
 </body>
