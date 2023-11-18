@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.6.0/fabric.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
-
 </head>
 <style>
     /* Estilos para la página */
@@ -270,6 +269,7 @@
             <div class="chart" id="chart5"></div>
             <div class="chart" id="chart6"></div>
         </div>
+        
     </section>
 </body>
         <script>
@@ -669,7 +669,23 @@ function descargarDatos() {
     link.click();
     document.body.removeChild(link);
 }
+ // Botones de formas y texto
+ const shapesModeButton = document.getElementById('shapes-mode-button');
+    const addRectangleButton = document.getElementById('add-rectangle-button');
+    const addCircleButton = document.getElementById('add-circle-button');
+    const addTextButton = document.getElementById('add-text-button');
+    const deleteButton = document.getElementById('delete-button');
+    const changeColorButton = document.getElementById('change-color-button');
+    const addImageButton = document.getElementById('add-image-button');
 
+    // Añadir tooltips a los botones
+    shapesModeButton.title = 'Cambiar a Modo Formas';
+    addRectangleButton.title = 'Agregar Rectángulo';
+    addCircleButton.title = 'Agregar Círculo';
+    addTextButton.title = 'Agregar Texto';
+    deleteButton.title = 'Eliminar Seleccionado';
+    changeColorButton.title = 'Cambiar Color Seleccionado';
+    addImageButton.title = 'Agregar Imagen';
         </script>
     </section>
 </body>
