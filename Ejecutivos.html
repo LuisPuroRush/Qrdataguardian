@@ -84,7 +84,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+            background-color: rgba(0, 0, 0, 0.5); 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,7 +156,7 @@
                 <a>Gianfranco Bazán</a>
             </div>
         </div>
-        <div class="circle" onclick="showUserProfile('Sergio Leyva', 'Encargado del Área de Trabajo', 3, 'usuario1.jpg')">
+        <div class="circle" onclick="showUserProfile('Sergio Leyva', 'Administración', 3, 'usuario1.jpg')">
             <img src="usuario1.jpg" alt="Usuario 3">
             <div class="user-info">
                 <a>Sergio Leyva</a>
@@ -207,8 +207,7 @@
     </div>
 
     <script>
-          function showUserProfile(userName, userRole, userId, imageSrc) {
-            
+        function showUserProfile(userName, userRole, userId, imageSrc) {
             const profileOverlay = document.getElementById("profile-overlay");
             const userProfile = document.getElementById("user-profile");
             const userImage = document.getElementById("user-image");
@@ -229,7 +228,7 @@
             // Simular una carga con un temporizador
             setTimeout(() => {
                 // Redirigir al perfil de usuario después de cargar
-                window.location.href = "estadisticas.html?userId=" + userId;
+                window.location.href = `${userName.replace(/\s+/g, '').toLowerCase()}.html`; // Redirige según el nombre del ejecutivo
             }, 2000); // Cambia este valor al tiempo de carga que desees
         }
     </script>

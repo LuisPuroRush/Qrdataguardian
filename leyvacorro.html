@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <title>Tu Nombre Aquí - Gerente General</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: black; /* Fondo oscuro */
+            color: white;
+            overflow: hidden; /* Evita barras de desplazamiento */
+        }
+        #bg-video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2; /* Asegura que esté sobre el video de fondo */
+        }
+        .circle {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-top: 20px;
+            border: 3px solid white;
+        }
+        .circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .title {
+            margin-top: 10px;
+        }
+        .menu-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .menu-option {
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin: 0 10px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-option:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .menu-option::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        .menu-option:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        .option-container {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            display: none; /* Ocultar por defecto */
+        }
+        .option-container.active {
+            display: block;
+        }
+        .option-container p {
+            margin: 0;
+            padding: 10px;
+        }
+        #chart-container canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+        #informe-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #informe-table th, #informe-table td {
+            border: 1px solid white;
+            padding: 8px;
+            text-align: left;
+        }
+        #informe-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        #edit-form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+        }
+        #edit-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #edit-form input {
+            width: calc(100% - 12px);
+            padding: 6px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+        #edit-form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #chat-form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #chat-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chat-list {
+            width: 30%;
+            padding: 10px;
+            border-right: 1px solid white;
+        }
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .chat-list-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-list-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .chat-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #chat-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+        #chat-submit {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .chat-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .chat-avatar {
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .chat-content {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
+
+    <div class="content-container">
+        <div class="circle">
+            <img src="Profesora.jpg" alt="Usuario 1">
+        </div>
+        <div class="title">Leyva Corro</div>
+
+        <div class="menu-container">
+            <button class="menu-option" onclick="showReports()">Ver Informes</button>
+            <button class="menu-option" onclick="resetSystem()">Reiniciar Sistema</button>
+            <button class="menu-option" onclick="openChat()">Chat de Uso Personal</button>
+        </div>
+
+        <div id="chart-container" class="option-container">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div id="informe-form" class="option-container">
+            <table id="informe-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Ingreso</th>
+                        <th>Salida</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Datos de ejemplo -->
+                    <tr>
+                        <td>2023-10-27</td>
+                        <td>8:00 AM</td>
+                        <td>5:00 PM</td>
+                        <td>$100</td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-28</td>
+                        <td>9:00 AM</td>
+                        <td>6:00 PM</td>
+                        <td>$120</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="informe-chart-container" style="margin-top: 20px;">
+                <canvas id="informe-chart"></canvas>
+            </div>
+        </div>
+
+        <div id="edit-form" class="option-container">
+            <label for="data1">Dato 1:</label>
+            <input type="text" id="data1" placeholder="Ingrese Dato 1">
+            <br>
+            <label for="data2">Dato 2:</label>
+            <input type="text" id="data2" placeholder="Ingrese Dato 2">
+            <br>
+            <button onclick="updateChartData()">Actualizar Datos</button>
+        </div>
+
+        <div id="chat-form" class="option-container">
+            <div id="chat-container">
+                <div class="chat-list">
+                    <div class="chat-list-item" onclick="openChatWith('Leyva Corro')">
+                        <img src="Profesora.jpg" alt="Leyva Corro">
+                        <span>Leyva Corro</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Gianfranco Bazán')">
+                        <img src="giovani.jpg" alt="Gianfranco Bazán">
+                        <span>Gianfranco Bazán</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Sergio Leyva')">
+                        <img src="usuario1.jpg" alt="Sergio Leyva">
+                        <span>Sergio Leyva</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Deily Matos')">
+                        <img src="usuario2.jpg" alt="Deily Matos">
+                        <span>Deily Matos</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Frank Aguilar')">
+                        <img src="usuario3.jpg" alt="Frank Aguilar">
+                        <span>Frank Aguilar</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Vanessa Genovés')">
+                        <img src="usuario4.jpg" alt="Vanessa Genovés">
+                        <span>Vanessa Genovés</span>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatWith('Henry Ascencio')">
+                        <img src="usuario5.jpg" alt="Henry Ascencio">
+                        <span>Henry Ascencio</span>
+                    </div>
+                </div>
+                
+                <div class="chat-content" id="chat-messages"></div>
+            </div>
+            <div class="chat-box">
+                <input type="text" id="chat-input" placeholder="Escribe un mensaje..." required>
+                <button id="chat-submit" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+        <div id="reset-container" class="option-container">
+            <p>¿Estás seguro de que deseas reiniciar el sistema?</p>
+            <button onclick="confirmReset()">Sí, reiniciar</button>
+            <button onclick="cancelReset()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos de ejemplo para el gráfico
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Dato 1', 'Dato 2'],
+                datasets: [{
+                    label: '% de logro',
+                    data: [75, 60],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Datos de ejemplo para el gráfico de informes
+        var informeChart = document.getElementById('informe-chart').getContext('2d');
+        var myInformeChart = new Chart(informeChart, {
+            type: 'bar',
+            data: {
+                labels: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5'],
+                datasets: [{
+                    label: 'Ventas 2023',
+                    data: [120, 150, 80, 200, 100],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Almacena los datos ingresados
+        var storedData = {
+            data1: 75,
+            data2: 60
+        };
+
+        // Actualiza el gráfico con los datos almacenados
+        function updateChart() {
+            myChart.data.datasets[0].data = [storedData.data1, storedData.data2];
+            myChart.update();
+        }
+
+        // Funciones para mostrar/ocultar opciones
+        function showReports() {
+            hideAllContainers();
+            document.getElementById('informe-form').classList.add('active');
+        }
+
+        function resetSystem() {
+            hideAllContainers();
+            document.getElementById('reset-container').classList.add('active');
+        }
+
+        function openChat() {
+            hideAllContainers();
+            document.getElementById('chat-form').classList.add('active');
+        }
+
+        function confirmReset() {
+            // Lógica para reiniciar el sistema
+            alert('Sistema reiniciado');
+            // Restablecer gráficos y datos a los valores iniciales
+            storedData = {
+                data1: 0,
+                data2: 0
+            };
+            updateChart();
+        }
+
+        function cancelReset() {
+            // Cancelar el reinicio del sistema
+            alert('Reinicio cancelado');
+        }
+
+        function hideAllContainers() {
+            document.getElementById('informe-form').classList.remove('active');
+            document.getElementById('reset-container').classList.remove('active');
+            document.getElementById('chat-form').classList.remove('active');
+        }
+
+        // Funciones para editar datos en el gráfico
+        function updateChartData() {
+            storedData.data1 = parseInt(document.getElementById('data1').value) || 0;
+            storedData.data2 = parseInt(document.getElementById('data2').value) || 0;
+
+            updateChart(); // Actualizar el gráfico
+        }
+
+        // Chat functions
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const message = input.value;
+
+            if (message.trim() !== '') {
+                messages.innerHTML += `<div class="chat-box"><div class="chat-avatar"><img src="Profesora.jpg" alt="Usuario 1"></div><div class="chat-content"><strong>Leyva Corro:</strong> ${message}</div></div>`;
+                input.value = '';
+            }
+        }
+
+        function openChatWith(ejecutivo) {
+            hideAllContainers();
+            document.getElementById('chat-form').classList.add('active');
+            document.getElementById('chat-messages').innerHTML = `<div class="chat-box"><div class="chat-avatar"><img src="${getEjecutivoImage(ejecutivo)}" alt="${ejecutivo}"></div><div class="chat-content"><strong>${ejecutivo}:</strong> ¡Hola! ¿En qué puedo ayudarte?</div></div>`;
+        }
+
+        // Función para obtener la imagen del ejecutivo
+        function getEjecutivoImage(ejecutivo) {
+            // Puedes ajustar esto según las imágenes disponibles para cada ejecutivo
+            switch (ejecutivo) {
+                case 'Ejecutivo1':
+                    return 'Ejecutivo1.jpg';
+                case 'Ejecutivo2':
+                    return 'Ejecutivo2.jpg';
+                // Agrega más casos según sea necesario
+                default:
+                    return 'default.jpg'; // Imagen por defecto
+            }
+        }
+        
+    </script>
+</body>
+</html>
+
