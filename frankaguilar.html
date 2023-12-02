@@ -1,11 +1,582 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <title>Sergio - Plataforma de Datos</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            color: white;
+            overflow-y: auto;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-top: 20px;
+            border: 3px solid white;
+        }
+
+        .circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .title {
+            margin-top: 10px;
+        }
+
+        .menu-container {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .menu-option {
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin: 0 10px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-option:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-option::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .menu-option:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .option-container {
+            width: 60%;
+            max-width: none;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+        }
+
+        .option-container.active {
+            display: block;
+        }
+
+        .option-container p {
+            margin: 0;
+            padding: 10px;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        #chat-form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #chat-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-list {
+            width: 30%;
+            padding: 10px;
+            border-right: 1px solid white;
+        }
+
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .chat-list-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-list-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #chat-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        #chat-submit {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .chat-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .chat-avatar {
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-content {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .chart-container canvas {
+            width: 45%;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos para la calculadora */
+        #calculator-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        #calculator-container {
+            position: fixed;
+            top: 80px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+            z-index: 3;
+        }
+
+        .calculator-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+
+        .calculator-button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .calculator-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .calculator-output {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        /* Botón para actualizar estadísticas */
+        .update-stats-button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .update-stats-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
+
 <body>
-    
+    <video src="video1.mp4" loop muted autoplay id="bg-video" type="video/mp4"></video>
+
+    <div class="content-container">
+        <div class="circle">
+            <img src="usuario3.jpg" alt="Deily Matos">
+        </div>
+        <div class="title">Frank Aguilar</div>
+
+        <div class="menu-container">
+            <button class="menu-option" onclick="showGananciaPerdida()">Ganancia y Pérdida</button>
+            <button class="menu-option" onclick="showEstadisticas()">Estadísticas</button>
+            <button class="menu-option" onclick="toggleChat()">Chat de Uso Personal</button>
+        </div>
+
+        <!-- Contenedor de Ganancia y Pérdida -->
+        <div id="ganancia-container" class="option-container">
+            <h2>Ganancia y Pérdida</h2>
+            <p>Datos sobre el gasto de la empresa y empleados:</p>
+
+            <!-- Gráficos de ganancia y pérdida -->
+            <div class="chart-container">
+                <canvas id="gastoChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="empleadosChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Otros datos de ganancia y pérdida -->
+            <p>Otros datos relevantes sobre la ganancia y pérdida de la empresa...</p>
+        </div>
+
+        <!-- Contenedor de Estadísticas -->
+        <div id="estadisticas-container" class="option-container">
+            <h2>Estadísticas</h2>
+            <p>Datos entregados y gráficos sobre el avance y la competencia:</p>
+
+            <!-- Gráficos de estadísticas -->
+            <div class="chart-container">
+                <canvas id="avanceChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="competenciaChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Datos específicos sobre las estadísticas -->
+            <p>Cantidad de datos entregados: <span id="contadorDatos">0</span></p>
+
+            <!-- Gráfico circular -->
+            <div class="doughnut-container">
+                <h3>Porcentaje necesario para competir con otras empresas</h3>
+                <canvas id="doughnutChart" class="doughnut-chart" width="200" height="200"></canvas>
+            </div>
+
+            <!-- Botón para actualizar estadísticas -->
+            <button class="update-stats-button" onclick="updateStatistics()">Actualizar Estadísticas</button>
+        </div>
+
+        <!-- Contenedor de chat -->
+        <div id="chat-form" class="option-container">
+            <div id="chat-container">
+                <div class="chat-list">
+                    <div class="chat-list-item" onclick="openChatWith('Leyva Corro')">
+                        <img src="Profesora.jpg" alt="Leyva Corro">
+                        <span>Leyva Corro</span>
+                    </div>
+                    <!-- Añade más contactos según sea necesario -->
+                </div>
+
+                <div class="chat-content" id="chat-messages"></div>
+            </div>
+            <div class="chat-box">
+                <input type="text" id="chat-input" placeholder="Escribe un mensaje..." required>
+                <button id="chat-submit" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+        <!-- Icono de la calculadora -->
+        <i id="calculator-icon" class="bx bx-calculator" onclick="toggleCalculator()"></i>
+
+        <!-- Contenedor de la calculadora -->
+        <div id="calculator-container" class="calculator-container">
+            <div class="calculator-output" id="calculator-output">0</div>
+            <button class="calculator-button" onclick="clearOutput()">C</button>
+            <button class="calculator-button" onclick="appendToOutput('/')">/</button>
+            <button class="calculator-button" onclick="appendToOutput('*')">*</button>
+            <button class="calculator-button" onclick="appendToOutput('-')">-</button>
+            <button class="calculator-button" onclick="appendToOutput('4')">4</button>
+            <button class="calculator-button" onclick="appendToOutput('5')">5</button>
+            <button class="calculator-button" onclick="appendToOutput('6')">6</button>
+            <button class="calculator-button" onclick="appendToOutput('+')">+</button>
+            <button class="calculator-button" onclick="appendToOutput('1')">1</button>
+            <button class="calculator-button" onclick="appendToOutput('2')">2</button>
+            <button class="calculator-button" onclick="appendToOutput('3')">3</button>
+            <button class="calculator-button" onclick="calculateResult()">=</button>
+            <button class="calculator-button" onclick="appendToOutput('0')">0</button>
+            <button class="calculator-button" onclick="appendToOutput('.')">.</button>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Funciones para mostrar/ocultar opciones
+            function showGananciaPerdida() {
+                hideAllContainers();
+                document.getElementById('ganancia-container').classList.add('active');
+            }
+
+            function showEstadisticas() {
+                hideAllContainers();
+                document.getElementById('estadisticas-container').classList.add('active');
+            }
+
+            function toggleChat() {
+                hideAllContainers();
+                document.getElementById('chat-form').classList.toggle('active');
+            }
+
+            function toggleCalculator() {
+                const calculatorContainer = document.getElementById('calculator-container');
+                calculatorContainer.style.display = calculatorContainer.style.display === 'none' ? 'block' : 'none';
+            }
+
+            function hideAllContainers() {
+                document.getElementById('ganancia-container').classList.remove('active');
+                document.getElementById('estadisticas-container').classList.remove('active');
+                document.getElementById('chat-form').classList.remove('active');
+                // Agrega más contenedores según sea necesario
+            }
+
+            // Funciones de chat
+            function sendMessage() {
+                const input = document.getElementById('chat-input');
+                const messages = document.getElementById('chat-messages');
+                const message = input.value;
+
+                if (message.trim() !== '') {
+                    messages.innerHTML += `<div class="chat-box"><div class="chat-avatar"><img src="sergio.jpg" alt="Sergio"></div><div class="chat-content"><strong>Sergio:</strong> ${message}</div></div>`;
+                    input.value = '';
+                }
+            }
+
+            function openChatWith(person) {
+                hideAllContainers();
+                document.getElementById('chat-form').classList.add('active');
+                document.getElementById('chat-messages').innerHTML = `<div class="chat-box"><div class="chat-avatar"><img src="${getPersonImage(person)}" alt="${person}"></div><div class="chat-content"><strong>${person}:</strong> ¡Hola! ¿En qué puedo ayudarte?</div></div>`;
+            }
+
+            function getPersonImage(person) {
+                switch (person) {
+                    case 'Leyva Corro':
+                        return 'Profesora.jpg';
+                    default:
+                        return 'default.jpg'; // Imagen por defecto
+                }
+            }
+
+            const gastoConfig = {
+                type: 'bar',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+                    datasets: [{
+                        label: 'Gasto Mensual',
+                        data: [5000, 6000, 4500, 7000, 5500],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+            const empleadosConfig = {
+                type: 'line',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+                    datasets: [{
+                        label: 'Número de Empleados',
+                        data: [10, 12, 15, 13, 14],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+            const avanceConfig = {
+                type: 'line',
+                data: {
+                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                    datasets: [{
+                        label: 'Avance Mensual',
+                        data: [20, 40, 60, 80],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            };
+
+            const competenciaConfig = {
+                type: 'bar',
+                data: {
+                    labels: ['Empresa A', 'Empresa B', 'Empresa C', 'Empresa D', 'Tu Empresa'],
+                    datasets: [{
+                        label: 'Porcentaje de Mercado',
+                        data: [15, 25, 20, 18, 22],
+                        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)'],
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 30
+                        }
+                    }
+                }
+            };
+
+            const doughnutConfig = {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completado', 'Pendiente'],
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(255, 255, 255, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 255, 255, 0.5)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                }
+            };
+
+            const gastoChart = new Chart(document.getElementById('gastoChart'), gastoConfig);
+            const empleadosChart = new Chart(document.getElementById('empleadosChart'), empleadosConfig);
+            const avanceChart = new Chart(document.getElementById('avanceChart'), avanceConfig);
+            const competenciaChart = new Chart(document.getElementById('competenciaChart'), competenciaConfig);
+            const doughnutChart = new Chart(document.getElementById('doughnutChart'), doughnutConfig);
+
+            // Función para actualizar estadísticas
+            function updateStatistics() {
+                const contadorDatosElement = document.getElementById('contadorDatos');
+                const currentCount = parseInt(contadorDatosElement.innerText, 10);
+                const newCount = currentCount + 1;
+                contadorDatosElement.innerText = newCount;
+
+                // Puedes agregar aquí la lógica para actualizar los datos de los gráficos, si es necesario.
+            }
+        </script>
+    </div>
 </body>
+
 </html>
